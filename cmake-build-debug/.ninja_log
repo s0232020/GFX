@@ -1,0 +1,12 @@
+# ninja log v5
+8	1390	7302391720745186	CMakeFiles/engine.dir/Intro.cpp.obj	4e9896f6c37e8e43
+871	1050	7296213135734210	GFX.exe	57fb22793ac1d532
+10	1669	7302395670966851	CMakeFiles/engine.dir/engine.cc.obj	5870082bce8f0d99
+1671	2255	7302395676746784	engine.exe	a821d12cfad0a50e
+1	1538	7296215543168891	CMakeFiles/engine.dir/easy_image.cc.obj	1e10985c59f06f39
+9	3142	7296215559164741	CMakeFiles/engine.dir/ini_configuration.cc.obj	c463bfe19256fe6c
+34	1426	7302852453123930	CMakeFiles/engine.dir/Intro.cpp.obj	f2566c1e7fa9bed2
+9	1513	7302852453994956	CMakeFiles/engine.dir/easy_image.cc.obj	37c1fcad04d6387a
+18	1764	7302852456519367	CMakeFiles/engine.dir/engine.cc.obj	36e1688b41e0e15b
+25	3454	7302852473366233	CMakeFiles/engine.dir/ini_configuration.cc.obj	c19ca9200e796275
+3455	4057	7302852479362968	engine.exe	a821d12cfad0a50e
