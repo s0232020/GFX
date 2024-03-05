@@ -118,7 +118,7 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
     double dx = (imagex/2)-dcx;
     double dy = (imagey/2)-dcy;
     img::EasyImage image(imagex, imagey);
-    img::Color color({255, 255, 255});
+    img::Color color(color);
 
 
     for (const auto& element:lines){
@@ -136,5 +136,26 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
         p2y = p2y + dy;
         image.draw_line(p1x, p1y, p2x, p2y, color);
     }
+    return image;
+}
+
+int LSystem(std::string inputfile){
+    LParser::LSystem2D l_system;
+    std::ifstream input_stream(inputfile);
+    input_stream >> l_system;
+    input_stream.close();
+
+    
+
+    return 0;
+}
+
+img::EasyImage LSystem2D(const ini::Configuration &configuration){
+    int size = configuration["General"]["size"].as_int_or_die();
+    std::vector<int> backgroundcolor = configuration["General"]["backgroundcolor"].as_int_tuple_or_die();
+    std::string inputfile = configuration["2DLSystem"]["inputfile"].as_string_or_die();
+    std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
+    LSystem(inputfile);
+    img::EasyImage image(size,size);
     return image;
 }

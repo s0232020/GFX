@@ -21,6 +21,7 @@ set(engine_sources
         Intro.cpp
         Intro.h
         Include.h
+        l_parser.cc
 )
 
 ############################################################

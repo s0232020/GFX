@@ -2,7 +2,7 @@
 #include "Intro.h"
 
 
-void testLines2D(){
+void TestLines2D(){
     Point2D p1(100.0, 100.0);
     Point2D p2(400.0, 100.0);
     Point2D p3(100.0, 400.0);
@@ -21,7 +21,7 @@ void testLines2D(){
 
     draw2DLines(rectangle, 500);
     img::EasyImage image = draw2DLines(rectangle, 500);
-    std::ofstream fout("out.bmp", std::ios::binary);
+    std::ofstream fout("TestLines2D.bmp", std::ios::binary);
     fout << image;
     fout.close();
 }
@@ -30,7 +30,7 @@ void testLines2D(){
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
-    testLines2D();
+    TestLines2D();
     std::string type = configuration["General"]["type"].as_string_or_die();
     if (type == "IntroColorRectangle"){
         return colorRectangle(configuration);
@@ -52,6 +52,9 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
         else {
             throw std::runtime_error("Unknown figure: " + figure);
         }
+    }
+    else if(type == "2DLSystem"){
+        return LSystem2D(configuration);
     }
     else{
         throw std::runtime_error("Unknown type: " + type);

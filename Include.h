@@ -1,7 +1,3 @@
-//
-// Created by Family on 14/02/2024.
-//
-
 #ifndef ENGINE_INCLUDE_H
 #define ENGINE_INCLUDE_H
 
@@ -12,6 +8,8 @@
 #include <stdexcept>
 #include <string>
 #include <cmath>
+#include "l_parser.h"
+#include <string>
 
 struct NormalizedColor{
     double r = 0.0;
