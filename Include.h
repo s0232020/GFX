@@ -11,6 +11,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <cmath>
 
 struct NormalizedColor{
     double r = 0.0;

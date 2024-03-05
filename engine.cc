@@ -3,15 +3,15 @@
 
 
 void testLines2D(){
-    Point2D p1(110.0, 20.0);
-    Point2D p2(220.0, 450.0);
-    Point2D p3(50.0, 60.0);
-    Point2D p4(50.0, 10.0);
+    Point2D p1(100.0, 100.0);
+    Point2D p2(400.0, 100.0);
+    Point2D p3(100.0, 400.0);
+    Point2D p4(400.0, 400.0);
     Color color({1.0, 0.0, 0.0});
     Line2D l1(p1, p2, color);
-    Line2D l2(p1, p4, color);
-    Line2D l3(p2, p3, color);
-    Line2D l4(p3, p4, color);
+    Line2D l2(p2, p4, color);
+    Line2D l3(p4, p3, color);
+    Line2D l4(p3, p1, color);
 
     Lines2D rectangle;
     rectangle.push_back(l1);

@@ -83,25 +83,25 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
         if (element.p1.x > xmax){
             xmax = element.p1.x;
         }
-        else if (element.p2.x > xmax){
+        if (element.p2.x > xmax){
             xmax = element.p2.x;
         }
-        else if (element.p1.x < xmin){
+        if (element.p1.x < xmin){
             xmin = element.p1.x;
         }
-        else if (element.p2.x < xmin){
+        if (element.p2.x < xmin){
             xmin = element.p2.x;
         }
-        else if (element.p1.y < ymin){
+        if (element.p1.y < ymin){
             ymin = element.p1.y;
         }
-        else if (element.p2.y < ymin){
+        if (element.p2.y < ymin){
             ymin = element.p2.y;
         }
-        else if (element.p1.y > ymax){
+        if (element.p1.y > ymax){
             ymax = element.p1.y;
         }
-        else if (element.p2.y > ymax){
+        if (element.p2.y > ymax){
             ymax = element.p2.y;
         }
     }
@@ -129,7 +129,7 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
         p1x = element.p1.x*d;
         p1y = element.p1.y*d;
         p2x = element.p2.x*d;
-        p2y = element.p2.x*d;
+        p2y = element.p2.y*d;
         p1x = p1x + dx;
         p1y = p1y + dy;
         p2x = p2x + dx;
