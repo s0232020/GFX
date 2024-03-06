@@ -47,7 +47,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
             return linesQuarterCircle(configuration);
         }
         else if (figure == "Diamond"){
-            return linesQuarterCircle(configuration);
+            return linesDiamond(configuration);
         }
         else {
             throw std::runtime_error("Unknown figure: " + figure);

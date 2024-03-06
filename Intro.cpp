@@ -72,6 +72,7 @@ img::EasyImage linesQuarterCircle(const ini::Configuration &configuration){
     return image;
 }
 
+
 img::EasyImage draw2DLines(const Lines2D &lines,const int size){
     double xmin = lines.front().p1.x;
     double xmax = lines.front().p1.x;
@@ -138,6 +139,20 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
     return image;
 }
 
+img::EasyImage linesDiamond(const ini::Configuration &configuration){
+    int nrlines = configuration["LineProperties"]["nrLines"].as_int_or_die();
+    int width = configuration["ImageProperties"]["width"].as_int_or_die();
+    int height = configuration["ImageProperties"]["height"].as_int_or_die();
+    std::vector<double> backgroundColor = configuration["LineProperties"]["backgroundcolor"].as_double_tuple_or_die();
+    std::vector<double> lineColor = configuration["LineProperties"]["lineColor"].as_double_tuple_or_die();
+    img::EasyImage image(width, height);
+
+    Color LineColor(lineColor);
+    Color BackgroundColor(backgroundColor);
+    
+
+    return image;
+}
 void ReadLSystem(std::string inputfile){
     LParser::LSystem2D l_system;
     std::ifstream input_stream(inputfile);
