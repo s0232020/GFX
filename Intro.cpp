@@ -198,28 +198,23 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
     // Interpreteer de resulterende string als instructies voor het tekenen van lijnen
     Point2D oldPoint(0,0); // Muaz
     Point2D newPoint(0,0); // Muaz
+    std::stack<double> angleStack;
     double currentAngle = starting_angle;
 
-    for (char instruction : currentString) {
-//        if (l_system.draw(instruction)) {
-//            // Voeg een lijn toe op basis van de tekeninstructie en de huidige positie
-//            Point2D p1(currentX, currentY);
-//
-//            // Bereken eindpositie op basis van de hoek en stapgrootte
-//            currentX += std::cos(currentAngle * M_PI / 180.0);
-//            currentY += std::sin(currentAngle * M_PI / 180.0);
-//
-//            Point2D p2(currentX, currentY);
-//            Line2D line(p1, p2, NormalizedColor);
-//            lines.push_back(line);
-//        }
-
-        // Pas de hoek aan op basis van de gegeven hoek
+    for (char instruction : currentString) { // Deze hele for loop is geinspireerd door de code van Muaz Moin, hij heeft mij geholpen
         if (instruction == '+') {
             currentAngle += angle;
         } else if (instruction == '-') {
             currentAngle -= angle;
-        } else{ // Als de letter een teken voor een lijn is
+        } else if (instruction == '(') {
+            angleStack.push(currentAngle); // Store current angle on opening bracket
+        } else if (instruction == ')') { // Handle closing bracket
+            if (!angleStack.empty()) {
+                currentAngle = angleStack.top(); // Restore angle from stack
+                angleStack.pop();
+            }
+        }
+        else{ // Als de letter een teken voor een lijn is
             oldPoint = newPoint;
             newPoint.x = oldPoint.x + std::cos(currentAngle * M_PI / 180.0);
             newPoint.y = oldPoint.y + std::sin(currentAngle * M_PI / 180.0);
@@ -231,7 +226,6 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
             }
         }
     }
-
     return lines;
 }
 img::EasyImage LSystem2D(const ini::Configuration &configuration){

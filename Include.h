@@ -11,6 +11,7 @@
 #include "l_parser.h"
 #include <string>
 #include <set>
+#include <stack>
 
 struct NormalizedColor{
     double r = 0.0;
