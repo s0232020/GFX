@@ -1,5 +1,4 @@
 #include "Include.h"
-
 img::EasyImage colorRectangle(const ini::Configuration &configuration)
 {
     int width = configuration["ImageProperties"]["width"].as_int_or_die();
@@ -139,23 +138,37 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
     return image;
 }
 
-int LSystem(std::string inputfile){
+void ReadLSystem(std::string inputfile){
     LParser::LSystem2D l_system;
     std::ifstream input_stream(inputfile);
     input_stream >> l_system;
     input_stream.close();
 
-    
+    std::set<char> alphabet = l_system.get_alphabet();
+    double angle = l_system.get_angle();
+    std::string initiator = l_system.get_initiator();
+    unsigned int iterations = l_system.get_nr_iterations();
+    double starting_angle = l_system.get_starting_angle();
 
-    return 0;
+    for (char c:alphabet){
+        bool draw = l_system.draw(c);
+        std::string replacement = l_system.get_replacement(c);
+    }
 }
+
+
 
 img::EasyImage LSystem2D(const ini::Configuration &configuration){
     int size = configuration["General"]["size"].as_int_or_die();
     std::vector<int> backgroundcolor = configuration["General"]["backgroundcolor"].as_int_tuple_or_die();
     std::string inputfile = configuration["2DLSystem"]["inputfile"].as_string_or_die();
     std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
-    LSystem(inputfile);
+    ReadLSystem(inputfile);
     img::EasyImage image(size,size);
     return image;
+}
+
+
+Lines2D DrawLSystem(const LParser::LSystem2D &l_system){
+    
 }

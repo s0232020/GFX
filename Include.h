@@ -10,6 +10,7 @@
 #include <cmath>
 #include "l_parser.h"
 #include <string>
+#include <set>
 
 struct NormalizedColor{
     double r = 0.0;
