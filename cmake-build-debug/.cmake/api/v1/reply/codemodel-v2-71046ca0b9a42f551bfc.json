@@ -50,12 +50,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug",
-		"source" : "C:/Users/32465/Documents/GitHub/GFX"
+		"build" : "C:/Users/Family/Documents/GitHub/GFX/cmake-build-debug",
+		"source" : "C:/Users/Family/Documents/GitHub/GFX"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 6
+		"minor" : 5
 	}
 }

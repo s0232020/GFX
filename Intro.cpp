@@ -184,6 +184,55 @@ img::EasyImage LSystem2D(const ini::Configuration &configuration){
 }
 
 
-//Lines2D DrawLSystem(const LParser::LSystem2D &l_system){
-//    todo
-//}
+Lines2D DrawLSystem(const LParser::LSystem2D &l_system) {
+    Lines2D lines;
+
+    // Haal de relevante informatie op uit het L-systeem
+    std::set<char> alphabet = l_system.get_alphabet();
+    double angle = l_system.get_angle();
+    std::string initiator = l_system.get_initiator();
+    unsigned int iterations = l_system.get_nr_iterations();
+    double starting_angle = l_system.get_starting_angle();
+
+    // Voer de L-system iteraties uit
+    std::string currentString = initiator;
+    for (unsigned int i = 0; i < iterations; ++i) {
+        std::string nextString;
+        for (char ch : currentString) {
+            if (alphabet.find(ch) != alphabet.end()) {
+                nextString += l_system.get_replacement(ch);
+            } else {
+                nextString += ch;
+            }
+        }
+        currentString = nextString;
+    }
+
+    // Interpreteer de resulterende string als instructies voor het tekenen van lijnen
+    double currentX = 0, currentY = 0;
+    double currentAngle = starting_angle;
+
+    for (char instruction : currentString) {
+        if (l_system.draw(instruction)) {
+            // Voeg een lijn toe op basis van de tekeninstructie en de huidige positie
+            Line2D line;
+            line.p1 = Point2D(currentX, currentY);
+
+            // Bereken eindpositie op basis van de hoek en stapgrootte
+            currentX += std::cos(currentAngle * M_PI / 180.0);
+            currentY += std::sin(currentAngle * M_PI / 180.0);
+
+            line.p2 = Point2D(currentX, currentY);
+            lines.push_back(line);
+        }
+
+        // Pas de hoek aan op basis van de gegeven hoek
+        if (instruction == '+') {
+            currentAngle += angle;
+        } else if (instruction == '-') {
+            currentAngle -= angle;
+        }
+    }
+
+    return lines;
+}

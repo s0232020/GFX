@@ -91,6 +91,8 @@ struct Line2D{
     Point2D p2;
     Color color;
 
+    Line2D();
+
     Line2D(Point2D p1, Point2D p2, Color color){
         this->p1 = p1;
         this->p2 = p2;
