@@ -149,7 +149,7 @@ img::EasyImage linesDiamond(const ini::Configuration &configuration){
 
     Color LineColor(lineColor);
     Color BackgroundColor(backgroundColor);
-    
+
 
     return image;
 }
