@@ -1,13 +1,13 @@
 #ifndef ENGINE_INCLUDE_H
 #define ENGINE_INCLUDE_H
-
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "easy_image.h"
 #include "ini_configuration.h"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include <cmath>
 #include "l_parser.h"
 #include <string>
 #include <set>
@@ -30,8 +30,15 @@ struct NormalizedColor{
         else{
             throw std::runtime_error("Vector verkeerde size");
         }
-
     }
+    img::Color toEasyImageColor(){
+        img::Color returnValue;
+        returnValue.red = r * 255.0;
+        returnValue.green = g * 255.0;
+        returnValue.blue = b * 255.0;
+        return returnValue;
+    }
+
 };
 
 struct Color{

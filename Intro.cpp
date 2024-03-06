@@ -73,7 +73,8 @@ img::EasyImage linesQuarterCircle(const ini::Configuration &configuration){
 }
 
 
-img::EasyImage draw2DLines(const Lines2D &lines,const int size){
+img::EasyImage
+draw2DLines(const Lines2D &lines,const int size, NormalizedColor& backgroundcolor){
     double xmin = lines.front().p1.x;
     double xmax = lines.front().p1.x;
     double ymin = lines.front().p1.y;
@@ -117,7 +118,8 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int size){
 
     double dx = (imagex/2)-dcx;
     double dy = (imagey/2)-dcy;
-    img::EasyImage image(imagex, imagey);
+    img::Color convert = backgroundcolor.toEasyImageColor();
+    img::EasyImage image(imagex, imagey, convert);
     img::Color color(color);
 
 
@@ -153,7 +155,7 @@ img::EasyImage linesDiamond(const ini::Configuration &configuration){
 
     return image;
 }
-void ReadLSystem(std::string inputfile){
+LParser::LSystem2D ReadLSystem(std::string inputfile){
     LParser::LSystem2D l_system;
     std::ifstream input_stream(inputfile);
     input_stream >> l_system;
@@ -165,28 +167,13 @@ void ReadLSystem(std::string inputfile){
     unsigned int iterations = l_system.get_nr_iterations();
     double starting_angle = l_system.get_starting_angle();
 
-    for (char c:alphabet){
-        bool draw = l_system.draw(c);
-        std::string replacement = l_system.get_replacement(c);
-    }
+    return l_system;
 }
 
-
-
-img::EasyImage LSystem2D(const ini::Configuration &configuration){
-    int size = configuration["General"]["size"].as_int_or_die();
-    std::vector<int> backgroundcolor = configuration["General"]["backgroundcolor"].as_int_tuple_or_die();
-    std::string inputfile = configuration["2DLSystem"]["inputfile"].as_string_or_die();
-    std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
-    ReadLSystem(inputfile);
-    img::EasyImage image(size,size);
-    return image;
-}
-
-
-Lines2D DrawLSystem(const LParser::LSystem2D &l_system) {
+Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration &configuration) {
     Lines2D lines;
-
+    std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
+    Color Color(color);
     // Haal de relevante informatie op uit het L-systeem
     std::set<char> alphabet = l_system.get_alphabet();
     double angle = l_system.get_angle();
@@ -209,30 +196,55 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system) {
     }
 
     // Interpreteer de resulterende string als instructies voor het tekenen van lijnen
-    double currentX = 0, currentY = 0;
+    Point2D oldPoint(0,0); // Muaz
+    Point2D newPoint(0,0); // Muaz
     double currentAngle = starting_angle;
 
     for (char instruction : currentString) {
-        if (l_system.draw(instruction)) {
-            // Voeg een lijn toe op basis van de tekeninstructie en de huidige positie
-            Line2D line;
-            line.p1 = Point2D(currentX, currentY);
-
-            // Bereken eindpositie op basis van de hoek en stapgrootte
-            currentX += std::cos(currentAngle * M_PI / 180.0);
-            currentY += std::sin(currentAngle * M_PI / 180.0);
-
-            line.p2 = Point2D(currentX, currentY);
-            lines.push_back(line);
-        }
+//        if (l_system.draw(instruction)) {
+//            // Voeg een lijn toe op basis van de tekeninstructie en de huidige positie
+//            Point2D p1(currentX, currentY);
+//
+//            // Bereken eindpositie op basis van de hoek en stapgrootte
+//            currentX += std::cos(currentAngle * M_PI / 180.0);
+//            currentY += std::sin(currentAngle * M_PI / 180.0);
+//
+//            Point2D p2(currentX, currentY);
+//            Line2D line(p1, p2, Color);
+//            lines.push_back(line);
+//        }
 
         // Pas de hoek aan op basis van de gegeven hoek
         if (instruction == '+') {
             currentAngle += angle;
         } else if (instruction == '-') {
             currentAngle -= angle;
+        } else{ // Als de letter een teken voor een lijn is
+            oldPoint = newPoint;
+            newPoint.x = oldPoint.x + std::cos(currentAngle * M_PI / 180.0);
+            newPoint.y = oldPoint.y + std::sin(currentAngle * M_PI / 180.0);
+            if(l_system.draw(instruction)){
+                Line2D line(oldPoint, newPoint, Color);
+                lines.emplace_back(line);
+            } else{
+                ;
+            }
         }
     }
 
     return lines;
+}
+img::EasyImage LSystem2D(const ini::Configuration &configuration){
+    int size = configuration["General"]["size"].as_int_or_die();
+    std::vector<double> backgroundcolor = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+    std::string inputfile = configuration["2DLSystem"]["inputfile"].as_string_or_die();
+    std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
+    Color BackgroundColor(backgroundcolor);
+    Color Color(color);
+    LParser::LSystem2D l_system = ReadLSystem(inputfile);
+    Lines2D lines = DrawLSystem(l_system,configuration);
+    img::Color newColor = Color.toEasyImageColor();
+    img::Color newBackgroundColor = BackgroundColor.toEasyImageColor();
+    img::EasyImage image = draw2DLines(lines, size, &newBackgroundcolor);
+    return image;
 }
