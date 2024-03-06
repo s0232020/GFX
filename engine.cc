@@ -7,7 +7,7 @@ void TestLines2D(){
     Point2D p2(400.0, 100.0);
     Point2D p3(100.0, 400.0);
     Point2D p4(400.0, 400.0);
-    Color color({1.0, 0.0, 0.0});
+    NormalizedColor color({1.0, 0.0, 0.0});
     Line2D l1(p1, p2, color);
     Line2D l2(p2, p4, color);
     Line2D l3(p4, p3, color);
@@ -19,8 +19,7 @@ void TestLines2D(){
     rectangle.push_back(l3);
     rectangle.push_back(l4);
 
-    draw2DLines(rectangle, 500);
-    img::EasyImage image = draw2DLines(rectangle, 500);
+    img::EasyImage image = draw2DLines(rectangle, 500, color);
     std::ofstream fout("TestLines2D.bmp", std::ios::binary);
     fout << image;
     fout.close();

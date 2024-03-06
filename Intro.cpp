@@ -23,13 +23,13 @@ img::EasyImage introBlocks(const ini::Configuration &configuration){
     std::vector<double> colorBlackVec = configuration["BlockProperties"]["colorBlack"].as_double_tuple_or_die();
     int nrXBlocks = configuration["BlockProperties"]["nrXBlocks"].as_int_or_die();
     int nrYBlocks = configuration["BlockProperties"]["nrYBlocks"].as_int_or_die();
-    bool invertColors = configuration["BlockProperties"]["invertColors"].as_bool_or_die();
+    bool invertNormalizedColors = configuration["BlockProperties"]["invertNormalizedColors"].as_bool_or_die();
 
     int Wb = Wi/nrXBlocks;
     int Hb = Hi/nrYBlocks;
 
-    Color white(colorWhiteVec);
-    Color black(colorBlackVec);
+    NormalizedColor white(colorWhiteVec);
+    NormalizedColor black(colorBlackVec);
 
     for (unsigned int i = 0; i < Hi; i++) {
         for (unsigned int j = 0; j < Wi; j++) {
@@ -53,15 +53,15 @@ img::EasyImage linesQuarterCircle(const ini::Configuration &configuration){
     int Wi = configuration["ImageProperties"]["width"].as_int_or_die();
     int Hi = configuration["ImageProperties"]["height"].as_int_or_die();
     img::EasyImage image(Wi, Hi);
-    std::vector<double> backgroundColor = configuration["LineProperties"]["backgroundcolor"].as_double_tuple_or_die();
-    std::vector<double> lineColor = configuration["LineProperties"]["lineColor"].as_double_tuple_or_die();
+    std::vector<double> backgroundNormalizedColor = configuration["LineProperties"]["backgroundcolor"].as_double_tuple_or_die();
+    std::vector<double> lineNormalizedColor = configuration["LineProperties"]["lineNormalizedColor"].as_double_tuple_or_die();
     int nrLines = configuration["LineProperties"]["nrLines"].as_int_or_die();
 
     int Hs = Hi/(nrLines - 1);
     int Ws = Wi/(nrLines - 1);
 
-    Color LineColor(lineColor);
-    Color BackgroundColor(backgroundColor);
+    NormalizedColor LineNormalizedColor(lineNormalizedColor);
+    NormalizedColor BackgroundNormalizedColor(backgroundNormalizedColor);
 
     for (unsigned int i = 0; i < Hi; i++) {
         for (unsigned int j = 0; j < Wi; j++) {
@@ -145,12 +145,12 @@ img::EasyImage linesDiamond(const ini::Configuration &configuration){
     int nrlines = configuration["LineProperties"]["nrLines"].as_int_or_die();
     int width = configuration["ImageProperties"]["width"].as_int_or_die();
     int height = configuration["ImageProperties"]["height"].as_int_or_die();
-    std::vector<double> backgroundColor = configuration["LineProperties"]["backgroundcolor"].as_double_tuple_or_die();
-    std::vector<double> lineColor = configuration["LineProperties"]["lineColor"].as_double_tuple_or_die();
+    std::vector<double> backgroundNormalizedColor = configuration["LineProperties"]["backgroundcolor"].as_double_tuple_or_die();
+    std::vector<double> lineNormalizedColor = configuration["LineProperties"]["lineNormalizedColor"].as_double_tuple_or_die();
     img::EasyImage image(width, height);
 
-    Color LineColor(lineColor);
-    Color BackgroundColor(backgroundColor);
+    NormalizedColor LineNormalizedColor(lineNormalizedColor);
+    NormalizedColor BackgroundNormalizedColor(backgroundNormalizedColor);
 
 
     return image;
@@ -173,7 +173,7 @@ LParser::LSystem2D ReadLSystem(std::string inputfile){
 Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration &configuration) {
     Lines2D lines;
     std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
-    Color Color(color);
+    NormalizedColor NormalizedColor(color);
     // Haal de relevante informatie op uit het L-systeem
     std::set<char> alphabet = l_system.get_alphabet();
     double angle = l_system.get_angle();
@@ -210,7 +210,7 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
 //            currentY += std::sin(currentAngle * M_PI / 180.0);
 //
 //            Point2D p2(currentX, currentY);
-//            Line2D line(p1, p2, Color);
+//            Line2D line(p1, p2, NormalizedColor);
 //            lines.push_back(line);
 //        }
 
@@ -224,7 +224,7 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
             newPoint.x = oldPoint.x + std::cos(currentAngle * M_PI / 180.0);
             newPoint.y = oldPoint.y + std::sin(currentAngle * M_PI / 180.0);
             if(l_system.draw(instruction)){
-                Line2D line(oldPoint, newPoint, Color);
+                Line2D line(oldPoint, newPoint, NormalizedColor);
                 lines.emplace_back(line);
             } else{
                 ;
@@ -236,15 +236,13 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
 }
 img::EasyImage LSystem2D(const ini::Configuration &configuration){
     int size = configuration["General"]["size"].as_int_or_die();
-    std::vector<double> backgroundcolor = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+    std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
     std::string inputfile = configuration["2DLSystem"]["inputfile"].as_string_or_die();
     std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
-    Color BackgroundColor(backgroundcolor);
-    Color Color(color);
+    NormalizedColor backgroundColor(backgroundcolorVec);
+    NormalizedColor lineColor(color);
     LParser::LSystem2D l_system = ReadLSystem(inputfile);
     Lines2D lines = DrawLSystem(l_system,configuration);
-    img::Color newColor = Color.toEasyImageColor();
-    img::Color newBackgroundColor = BackgroundColor.toEasyImageColor();
-    img::EasyImage image = draw2DLines(lines, size, &newBackgroundcolor);
+    img::EasyImage image = draw2DLines(lines, size, backgroundColor);
     return image;
 }

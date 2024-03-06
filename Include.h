@@ -41,43 +41,6 @@ struct NormalizedColor{
 
 };
 
-struct Color{
-    unsigned int r = 0;
-    unsigned int g = 0;
-    unsigned int b = 0;
-
-    Color(){
-
-    }
-
-
-    Color(const std::vector<double>& doubleVec){
-        if(doubleVec.size() == 3){
-            r = doubleVec[0] * 255;
-            g = doubleVec[1] * 255;
-            b = doubleVec[2] * 255;
-        }
-        else{
-            throw std::runtime_error("Vector verkeerde size");
-        }
-    }
-
-    img::Color toEasyImageColor(){
-        img::Color returnValue(r, g, b);
-        return returnValue;
-    }
-
-    NormalizedColor toNormalizedColor(){
-        NormalizedColor returnValue;
-        returnValue.r = r / 255.0;
-        returnValue.g = g / 255.0;
-        returnValue.b = b / 255.0;
-        return returnValue;
-    }
-
-
-
-};
 
 struct Point2D{
     double x = 0.0;
@@ -96,11 +59,11 @@ struct Point2D{
 struct Line2D{
     Point2D p1;
     Point2D p2;
-    Color color;
+    NormalizedColor color;
 
     Line2D();
 
-    Line2D(Point2D p1, Point2D p2, Color color){
+    Line2D(Point2D p1, Point2D p2, NormalizedColor& color){
         this->p1 = p1;
         this->p2 = p2;
         this->color = color;
