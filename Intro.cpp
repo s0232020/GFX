@@ -169,6 +169,6 @@ img::EasyImage LSystem2D(const ini::Configuration &configuration){
 }
 
 
-Lines2D DrawLSystem(const LParser::LSystem2D &l_system){
-    
-}
+//Lines2D DrawLSystem(const LParser::LSystem2D &l_system){
+//    todo
+//}
