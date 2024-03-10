@@ -200,7 +200,7 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
     Point2D newPoint(0,0); // Muaz
     std::stack<double> angleStack;
     double currentAngle = starting_angle;
-
+    
     for (char instruction : currentString) { // Deze hele for loop is geinspireerd door de code van Muaz Moin, hij heeft mij geholpen
         if (instruction == '+') {
             currentAngle += angle;
