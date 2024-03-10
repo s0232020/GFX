@@ -174,6 +174,7 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
     Lines2D lines;
     std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
     NormalizedColor NormalizedColor(color);
+    NormalizedColor.toEasyImageColor();
     // Haal de relevante informatie op uit het L-systeem
     std::set<char> alphabet = l_system.get_alphabet();
     double angle = l_system.get_angle();
@@ -198,7 +199,7 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
     // Interpreteer de resulterende string als instructies voor het tekenen van lijnen
     Point2D oldPoint(0,0); // Muaz
     Point2D newPoint(0,0); // Muaz
-    std::stack<double> angleStack;
+    std::vector<std::vector<double>> bracket_stack;
     double currentAngle = starting_angle;
     
     for (char instruction : currentString) { // Deze hele for loop is geinspireerd door de code van Muaz Moin, hij heeft mij geholpen
@@ -207,11 +208,13 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
         } else if (instruction == '-') {
             currentAngle -= angle;
         } else if (instruction == '(') {
-            angleStack.push(currentAngle); // Store current angle on opening bracket
+            bracket_stack.push_back({newPoint.x, newPoint.y, currentAngle}); // Store current angle on opening bracket
         } else if (instruction == ')') { // Handle closing bracket
-            if (!angleStack.empty()) {
-                currentAngle = angleStack.top(); // Restore angle from stack
-                angleStack.pop();
+            if (!bracket_stack.empty()) {
+                currentAngle = bracket_stack.back()[2]; // Restore angle from stack
+                newPoint.x = bracket_stack.back()[0];
+                newPoint.y = bracket_stack.back()[1];
+                bracket_stack.pop_back();
             }
         }
         else{ // Als de letter een teken voor een lijn is
