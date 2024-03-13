@@ -1,7 +1,0 @@
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/engine.dir
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/list_install_components.dir
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/install.dir
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/install/local.dir
-C:/Users/32465/Documents/GitHub/GFX/cmake-build-debug/CMakeFiles/install/strip.dir
