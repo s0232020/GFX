@@ -243,3 +243,7 @@ img::EasyImage LSystem2D(const ini::Configuration &configuration){
     img::EasyImage image = draw2DLines(lines, size, backgroundColor);
     return image;
 }
+
+img::EasyImage LSystem3D(const ini::Configuration &configuration){
+
+}
