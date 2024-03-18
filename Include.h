@@ -12,6 +12,8 @@
 #include <string>
 #include <set>
 #include <stack>
+#include "vector3d.h"
+#include <list>
 
 struct NormalizedColor{
     double r = 0.0;
@@ -32,7 +34,7 @@ struct NormalizedColor{
             throw std::runtime_error("Vector verkeerde size");
         }
     }
-    img::Color toEasyImageColor(){
+    img::Color toEasyImageColor() const {
         img::Color returnValue;
         returnValue.red = r * 255.0;
         returnValue.green = g * 255.0;
@@ -57,12 +59,29 @@ struct Point2D{
     }
 };
 
+struct Point3D{
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
+    Point3D(){}
+    Point3D(double x, double y, double z){
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+};
+
 struct Line2D{
     Point2D p1;
     Point2D p2;
     NormalizedColor color;
 
-    Line2D();
+    Line2D(){}
+
+    Line2D(Point2D p1, Point2D p2){
+        this->p1 = p1;
+        this->p2 = p2;
+    }
 
     Line2D(Point2D p1, Point2D p2, NormalizedColor& color){
         this->p1 = p1;
@@ -70,6 +89,25 @@ struct Line2D{
         this->color = color;
     }
 };
+struct Line3D{
+    Point3D p1;
+    Point3D p2;
+    Line3D(){}
+    Line3D(Point3D p1, Point3D p2){
+        this->p1 = p1;
+        this->p2 = p2;
+    }
+};
+struct Face{
+    std::vector<int> point_indexes;
+};
+struct Figure{
+    std::vector<Vector3D> points;
+    std::vector<Face> faces;
+    NormalizedColor color;
+};
+typedef std::list<Figure> Figures3D;
 
 using Lines2D = std::vector<Line2D>;
+using Lines3D = std::vector<Line3D>;
 #endif //ENGINE_INCLUDE_H

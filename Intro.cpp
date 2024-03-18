@@ -120,10 +120,9 @@ draw2DLines(const Lines2D &lines,const int size, NormalizedColor& backgroundcolo
     double dy = (imagey/2)-dcy;
     img::Color convert = backgroundcolor.toEasyImageColor();
     img::EasyImage image(imagex, imagey, convert);
-    img::Color color(color);
 
 
-    for (const auto& element:lines){
+    for (auto& element:lines){
         double p1x = 0.0;
         double p2x = 0.0;
         double p1y = 0.0;
@@ -136,7 +135,7 @@ draw2DLines(const Lines2D &lines,const int size, NormalizedColor& backgroundcolo
         p1y = p1y + dy;
         p2x = p2x + dx;
         p2y = p2y + dy;
-        image.draw_line(p1x, p1y, p2x, p2y, color);
+        image.draw_line(p1x, p1y, p2x, p2y, element.color.toEasyImageColor());
     }
     return image;
 }
@@ -231,19 +230,49 @@ Lines2D DrawLSystem(const LParser::LSystem2D &l_system, const ini::Configuration
     }
     return lines;
 }
-img::EasyImage LSystem2D(const ini::Configuration &configuration){
+img::EasyImage LSystem2D(const ini::Configuration &configuration) {
     int size = configuration["General"]["size"].as_int_or_die();
     std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
     std::string inputfile = configuration["2DLSystem"]["inputfile"].as_string_or_die();
-    std::vector<double> color = configuration["2DLSystem"]["color"].as_double_tuple_or_die();
     NormalizedColor backgroundColor(backgroundcolorVec);
-    NormalizedColor lineColor(color);
     LParser::LSystem2D l_system = ReadLSystem(inputfile);
-    Lines2D lines = DrawLSystem(l_system,configuration);
+    Lines2D lines = DrawLSystem(l_system, configuration);
     img::EasyImage image = draw2DLines(lines, size, backgroundColor);
+
     return image;
 }
 
 img::EasyImage LSystem3D(const ini::Configuration &configuration){
+    int size = configuration["General"]["size"].as_int_or_die();
+    std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+    std::vector<double> color = configuration["Figure0"]["color"].as_double_tuple_or_die();
+    NormalizedColor backgroundColor(backgroundcolorVec);
+    int nrFigures = configuration["General"]["nrFigures"].as_int_or_die();
+    std::vector<double> eye = configuration["General"]["eye"].as_double_tuple_or_die();
+    double scale = configuration["Figure0"]["scale"].as_double_or_die();
+    double rotateX = configuration["Figure0"]["rotateX"].as_double_or_die();
+    double rotateY = configuration["Figure0"]["rotateY"].as_double_or_die();
+    double rotateZ = configuration["Figure0"]["rotateZ"].as_double_or_die();
+    std::vector<double> center = configuration["Figure0"]["center"].as_double_tuple_or_die();
+    int nrPoints = configuration["Figure0"]["nrPoints"].as_int_or_die();
+    int nrLines = configuration["Figure0"]["nrLines"].as_int_or_die();
+    std::vector<Point3D> points;
+    for(int i = 0; i < nrPoints; i++){
+        std::vector<double> pointData = configuration["Figure0"]["point" + std::to_string(i)].as_double_tuple_or_die();
+        Point3D point(pointData[0], pointData[1], pointData[2]);
+        points.emplace_back(point);
+    }
+    Lines3D lines;
 
+    for(int i = 0; i < nrLines; i++){
+        std::vector<int> lineData = configuration["Figure0"]["line" + std::to_string(i)].as_int_tuple_or_die();
+        std::vector<double> point1 = configuration["Figure0"]["point" + std::to_string(lineData[0])].as_double_tuple_or_die();
+        std::vector<double> point2 = configuration["Figure0"]["point" + std::to_string(lineData[1])].as_double_tuple_or_die();
+        Point3D p1(point1[0], point1[1], point1[2]);
+        Point3D p2(point2[0], point2[1], point2[2]);
+        Line3D line(p1, p2);
+        lines.emplace_back(line);
+    }
+    img::EasyImage image;
+    return image;
 }

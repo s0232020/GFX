@@ -2,34 +2,10 @@
 #include "Intro.h"
 
 
-void TestLines2D(){
-    Point2D p1(100.0, 100.0);
-    Point2D p2(400.0, 100.0);
-    Point2D p3(100.0, 400.0);
-    Point2D p4(400.0, 400.0);
-    NormalizedColor color({1.0, 0.0, 0.0});
-    Line2D l1(p1, p2, color);
-    Line2D l2(p2, p4, color);
-    Line2D l3(p4, p3, color);
-    Line2D l4(p3, p1, color);
-
-    Lines2D rectangle;
-    rectangle.push_back(l1);
-    rectangle.push_back(l2);
-    rectangle.push_back(l3);
-    rectangle.push_back(l4);
-
-    img::EasyImage image = draw2DLines(rectangle, 500, color);
-    std::ofstream fout("TestLines2D.bmp", std::ios::binary);
-    fout << image;
-    fout.close();
-}
-
 
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
-    TestLines2D();
     std::string type = configuration["General"]["type"].as_string_or_die();
     if (type == "IntroColorRectangle"){
         return colorRectangle(configuration);
@@ -54,6 +30,9 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
     }
     else if(type == "2DLSystem"){
         return LSystem2D(configuration);
+    }
+    else if(type == "Wireframe"){
+        return LSystem3D(configuration);
     }
     else{
         throw std::runtime_error("Unknown type: " + type);

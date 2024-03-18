@@ -22,6 +22,9 @@ set(engine_sources
         Intro.h
         Include.h
         l_parser.cc
+        vector3d.cc
+        Matrices.cpp
+        Matrices.h
 )
 
 ############################################################
