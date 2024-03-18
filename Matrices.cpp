@@ -11,6 +11,6 @@ void toPolar(const Vector3D &point, double &theta, double &phi, double &r){
 }
 
 Matrix eyePointTrans(const Vector3D &eyepoint){
-    toPolar(eyepoint);
+    ;
 
 }

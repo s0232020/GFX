@@ -256,11 +256,11 @@ img::EasyImage LSystem3D(const ini::Configuration &configuration){
     std::vector<double> center = configuration["Figure0"]["center"].as_double_tuple_or_die();
     int nrPoints = configuration["Figure0"]["nrPoints"].as_int_or_die();
     int nrLines = configuration["Figure0"]["nrLines"].as_int_or_die();
-    std::vector<Point3D> points;
+    Figure figure;
     for(int i = 0; i < nrPoints; i++){
         std::vector<double> pointData = configuration["Figure0"]["point" + std::to_string(i)].as_double_tuple_or_die();
-        Point3D point(pointData[0], pointData[1], pointData[2]);
-        points.emplace_back(point);
+        Vector3D vector = Vector3D::point(pointData[0], pointData[1], pointData[2]);
+        figure.points.emplace_back(vector);
     }
     Lines3D lines;
 

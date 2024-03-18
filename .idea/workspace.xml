@@ -21,40 +21,46 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="00ba3854-ff5d-4f0d-bbff-e6d8fecbd15b" name="Changes" comment="commit">
-      <change afterPath="$PROJECT_DIR$/Matrices.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Matrices.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Include.h" beforeDir="false" afterPath="$PROJECT_DIR$/Include.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Intro.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Intro.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intro.h" beforeDir="false" afterPath="$PROJECT_DIR$/Intro.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/TestLines2D.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/TestLines2D.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems001.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems001.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems002.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems002.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems003.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems003.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems004.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems004.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems005.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems005.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems006.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems006.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems007.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems007.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems008.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems008.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems009.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems009.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems010.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems010.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems011.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems011.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems012.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems012.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems013.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems013.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems014.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems014.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems015.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems015.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems016.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems016.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems017.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems017.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems018.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems018.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems019.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems019.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems020.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems020.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems021.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems021.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems022.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems022.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems023.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems023.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems024.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems024.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems025.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems025.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2D/l_systems026.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/L2D/l_systems026.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine.cc" beforeDir="false" afterPath="$PROJECT_DIR$/engine.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Matrices.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Matrices.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cache-v2-dfe095ad036e3a5abe81.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cmakeFiles-v1-48f09de32bf41fa475b2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-ec413522b1f8d5eac21f.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/directory-.-Debug-7663d88eee65d7c7acfc.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2024-03-13T14-12-25-0072.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-engine-Debug-6244ad33dee61f3c4349.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/toolchains-v1-3cb7ac949bd4d029da2a.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CMakeRCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CompilerIdC/a.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.26.4/CompilerIdCXX/a.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeConfigureLog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeConfigureLog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/Intro.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/Matrices.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/easy_image.cc.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/engine.cc.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/ini_configuration.cc.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/l_parser.cc.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/engine.dir/vector3d.cc.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/engine.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/engine.exe" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,9 +109,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "CMake Application.engine.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
@@ -127,6 +135,11 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="engine" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$/LineDrawings" PASS_PARENT_ENVS_2="true" PROJECT_NAME="engine" TARGET_NAME="engine" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="engine" RUN_TARGET_NAME="engine">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -157,6 +170,7 @@
       <workItem from="1710335579562" duration="15209000" />
       <workItem from="1710416843409" duration="66000" />
       <workItem from="1710762126403" duration="2000" />
+      <workItem from="1710762540256" duration="882000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -205,10 +219,9 @@
     <option name="version" value="3" />
   </component>
   <component name="VCPKGProject">
-    <isAutomaticEditVcpkgJson value="false" />
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
-    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
