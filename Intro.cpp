@@ -256,23 +256,23 @@ img::EasyImage LSystem3D(const ini::Configuration &configuration){
     std::vector<double> center = configuration["Figure0"]["center"].as_double_tuple_or_die();
     int nrPoints = configuration["Figure0"]["nrPoints"].as_int_or_die();
     int nrLines = configuration["Figure0"]["nrLines"].as_int_or_die();
+
     Figure figure;
     for(int i = 0; i < nrPoints; i++){
         std::vector<double> pointData = configuration["Figure0"]["point" + std::to_string(i)].as_double_tuple_or_die();
         Vector3D vector = Vector3D::point(pointData[0], pointData[1], pointData[2]);
         figure.points.emplace_back(vector);
     }
-    Lines3D lines;
 
-    for(int i = 0; i < nrLines; i++){
-        std::vector<int> lineData = configuration["Figure0"]["line" + std::to_string(i)].as_int_tuple_or_die();
-        std::vector<double> point1 = configuration["Figure0"]["point" + std::to_string(lineData[0])].as_double_tuple_or_die();
-        std::vector<double> point2 = configuration["Figure0"]["point" + std::to_string(lineData[1])].as_double_tuple_or_die();
-        Point3D p1(point1[0], point1[1], point1[2]);
-        Point3D p2(point2[0], point2[1], point2[2]);
-        Line3D line(p1, p2);
-        lines.emplace_back(line);
+    Face face;
+    for(int i = 0; i < nrLines; i++) {
+        std::vector<int> point_indexes = configuration["Figure0"]["line" + std::to_string(i)].as_int_tuple_or_die();
+        for(int index : point_indexes) {
+            face.point_indexes.emplace_back(index);
+        }
     }
+    Matrix m;
+
     img::EasyImage image;
     return image;
 }

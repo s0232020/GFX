@@ -14,6 +14,7 @@
 #include <stack>
 #include "vector3d.h"
 #include <list>
+#include <limits>
 
 struct NormalizedColor{
     double r = 0.0;
