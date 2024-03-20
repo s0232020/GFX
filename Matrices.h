@@ -53,6 +53,7 @@ struct TransformationMatrix {
     }
 
     void toPolar(const Vector3D& point, double& theta, double& phi) {
+        Matrix m;
         double r = std::sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
 
         // Handle cases where r is zero to avoid division by zero errors
@@ -64,21 +65,31 @@ struct TransformationMatrix {
 
         theta = std::atan2(point.y, point.x);
         phi = std::acos(point.z / r);
+
+        m(1,1) = -sin(theta);
+        m(1,2) = -cos(theta)*cos(phi);
+        m(1,3) = cos(theta)*sin(phi);
+        m(2,1) = cos(theta);
+        m(2,2) = -sin(theta)*cos(phi);
+        m(2,3) = sin(theta)*sin(phi);
+        m(3,2) = sin(phi);
+        m(3,3) = cos(phi);
+        m(4,3) = -r;
+
     }
 
-    Matrix eyePointTrans(const Vector3D &eyepoint, double rotateX, double rotateY, double rotateZ, double scale){
-        TransformationMatrix transform;
+    Matrix eyePointTrans(const Vector3D &eyepoint){
         Matrix m;
-
-        Vector3D::normalise(eyepoint);
-
-        m = transform.scaleFigure(scale);
-        m = transform.rotateX(rotateX);
-        m = transform.rotateY(rotateZ);
-        m = transform.rotateZ(rotateZ);
-        m = transform.translate(eyepoint);
-
         return m;
     }
+
+    Point2D doProjection(const Vector3D &point, const double d){
+
+    }
+
+    Lines2D doProjection(const Figures3D &){
+
+    }
+
 };
 #endif //ENGINE_MATRICES_H
