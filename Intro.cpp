@@ -1,4 +1,5 @@
 #include "Include.h"
+#include "Matrices.h"
 img::EasyImage colorRectangle(const ini::Configuration &configuration)
 {
     int width = configuration["ImageProperties"]["width"].as_int_or_die();
@@ -245,18 +246,21 @@ img::EasyImage LSystem2D(const ini::Configuration &configuration) {
 img::EasyImage LSystem3D(const ini::Configuration &configuration){
     int size = configuration["General"]["size"].as_int_or_die();
     std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+    NormalizedColor BackgroundNormalizedColor(backgroundcolorVec);
     std::vector<double> color = configuration["Figure0"]["color"].as_double_tuple_or_die();
+    NormalizedColor Color(color);
     NormalizedColor backgroundColor(backgroundcolorVec);
     int nrFigures = configuration["General"]["nrFigures"].as_int_or_die();
     std::vector<double> eye = configuration["General"]["eye"].as_double_tuple_or_die();
     double scale = configuration["Figure0"]["scale"].as_double_or_die();
-    double rotateX = configuration["Figure0"]["rotateX"].as_double_or_die();
-    double rotateY = configuration["Figure0"]["rotateY"].as_double_or_die();
-    double rotateZ = configuration["Figure0"]["rotateZ"].as_double_or_die();
+    double rotateXangle = configuration["Figure0"]["rotateX"].as_double_or_die();
+    double rotateYangle = configuration["Figure0"]["rotateY"].as_double_or_die();
+    double rotateZangle = configuration["Figure0"]["rotateZ"].as_double_or_die();
     std::vector<double> center = configuration["Figure0"]["center"].as_double_tuple_or_die();
     int nrPoints = configuration["Figure0"]["nrPoints"].as_int_or_die();
     int nrLines = configuration["Figure0"]["nrLines"].as_int_or_die();
 
+    Figures3D figures;
     Figure figure;
     for(int i = 0; i < nrPoints; i++){
         std::vector<double> pointData = configuration["Figure0"]["point" + std::to_string(i)].as_double_tuple_or_die();
@@ -264,15 +268,31 @@ img::EasyImage LSystem3D(const ini::Configuration &configuration){
         figure.points.emplace_back(vector);
     }
 
-    Face face;
     for(int i = 0; i < nrLines; i++) {
         std::vector<int> point_indexes = configuration["Figure0"]["line" + std::to_string(i)].as_int_tuple_or_die();
-        for(int index : point_indexes) {
+        Face face;
+        for (int index : point_indexes) {
             face.point_indexes.emplace_back(index);
         }
+        figure.faces.emplace_back(face);
     }
-    Matrix m;
 
-    img::EasyImage image;
+    Matrix rotatedX = rotateX(rotateXangle);
+    Matrix rotatedY = rotateY(rotateYangle);
+    Matrix rotatedZ = rotateZ(rotateZangle);
+    Matrix scaled = scaleFigure(scale);
+
+    Vector3D translation = Vector3D::point(eye[0], eye[1], eye[2]);
+    Matrix translated = translate(translation);
+
+    ApplyTransformation(figure, scaled);
+    ApplyTransformation(figure, rotatedX);
+    ApplyTransformation(figure, rotatedY);
+    ApplyTransformation(figure, rotatedZ);
+    figures.emplace_back(figure);
+
+    Lines2D lines = doProjection(figures, Color);
+    backgroundColor.toEasyImageColor();
+    img::EasyImage image = draw2DLines(lines, size, backgroundColor);
     return image;
 }

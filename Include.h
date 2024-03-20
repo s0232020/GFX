@@ -60,18 +60,6 @@ struct Point2D{
     }
 };
 
-struct Point3D{
-    double x = 0.0;
-    double y = 0.0;
-    double z = 0.0;
-    Point3D(){}
-    Point3D(double x, double y, double z){
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
-};
-
 struct Line2D{
     Point2D p1;
     Point2D p2;
@@ -90,15 +78,7 @@ struct Line2D{
         this->color = color;
     }
 };
-struct Line3D{
-    Point3D p1;
-    Point3D p2;
-    Line3D(){}
-    Line3D(Point3D p1, Point3D p2){
-        this->p1 = p1;
-        this->p2 = p2;
-    }
-};
+
 struct Face{
     std::vector<int> point_indexes;
 };
@@ -107,8 +87,7 @@ struct Figure{
     std::vector<Face> faces;
     NormalizedColor color;
 };
-typedef std::list<Figure> Figures3D;
 
+typedef std::list<Figure> Figures3D;
 using Lines2D = std::vector<Line2D>;
-using Lines3D = std::vector<Line3D>;
 #endif //ENGINE_INCLUDE_H
