@@ -1,6 +1,7 @@
 #ifndef ENGINE_INTRO_H
 #define ENGINE_INTRO_H
 #include "Include.h"
+#include "Matrices.h"
 
 img::EasyImage colorRectangle(const ini::Configuration &configuration);
 img::EasyImage introBlocks(const ini::Configuration &configuration);
