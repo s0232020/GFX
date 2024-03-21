@@ -1,5 +1,6 @@
 #include "Include.h"
 #include "Matrices.h"
+#include "TransformationMatrix.h"
 img::EasyImage colorRectangle(const ini::Configuration &configuration)
 {
     int width = configuration["ImageProperties"]["width"].as_int_or_die();
@@ -277,9 +278,9 @@ img::EasyImage LSystem3D(const ini::Configuration &configuration){
         figure.faces.emplace_back(face);
     }
 
-    Matrix rotatedX = rotateX(rotateXangle);
-    Matrix rotatedY = rotateY(rotateYangle);
-    Matrix rotatedZ = rotateZ(rotateZangle);
+    Matrix rotatedX = TransformationMatrix::rotateX(rotateXangle);
+    Matrix rotatedY = TransformationMatrix::rotateY(rotateYangle);
+    Matrix rotatedZ = TransformationMatrix::rotateZ(rotateZangle);
     Matrix scaled = scaleFigure(scale);
 
     Vector3D translation = Vector3D::point(eye[0], eye[1], eye[2]);

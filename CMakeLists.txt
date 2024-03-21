@@ -25,6 +25,7 @@ set(engine_sources
         vector3d.cc
         Matrices.cpp
         Matrices.h
+        TransformationMatrix.cpp
 )
 
 ############################################################
