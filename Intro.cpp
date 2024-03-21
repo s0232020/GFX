@@ -288,6 +288,7 @@ img::EasyImage LSystem3D(const ini::Configuration &configuration){
     backgroundColor.toEasyImageColor();
 
 
+
     TransformationMatrix::lineDrawing(scale, rotateXangle, rotateYangle, rotateZangle, center, eye);
     img::EasyImage image = draw2DLines(lines, size, backgroundColor);
     return image;
