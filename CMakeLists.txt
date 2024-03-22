@@ -15,17 +15,18 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${OWN_GXX_FLAGS}")
 # List all sources
 ############################################################
 set(engine_sources
-        easy_image.cc
-        engine.cc
-        ini_configuration.cc
-        Intro.cpp
-        Intro.h
-        Include.h
-        l_parser.cc
-        vector3d.cc
-        Matrices.cpp
-        Matrices.h
-        TransformationMatrix.cpp
+        src/easy_image.cc
+        src/engine.cc
+        src/ini_configuration.cc
+        GFX/main.cpp
+        GFX/main.h
+        src/Include.h
+        src/l_parser.cc
+        src/vector3d.cc
+        GFX/TransformationMatrix.cpp
+        GFX/Parser.cpp
+        GFX/Parser.h
+        GFX/Utils.h
 )
 
 ############################################################
