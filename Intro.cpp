@@ -243,53 +243,57 @@ img::EasyImage LSystem2D(const ini::Configuration &configuration) {
     return image;
 }
 
-img::EasyImage LSystem3D(const ini::Configuration &configuration){
+img::EasyImage LSystem3D(const ini::Configuration &configuration) {
     int size = configuration["General"]["size"].as_int_or_die();
     std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
-    NormalizedColor BackgroundNormalizedColor(backgroundcolorVec);
-    std::vector<double> color = configuration["Figure0"]["color"].as_double_tuple_or_die();
-    NormalizedColor Color(color);
     NormalizedColor backgroundColor(backgroundcolorVec);
     int nrFigures = configuration["General"]["nrFigures"].as_int_or_die();
     std::vector<double> eyepoint = configuration["General"]["eye"].as_double_tuple_or_die();
     Vector3D eye = Vector3D::vector(eyepoint[0], eyepoint[1], eyepoint[2]);
-    double scale = configuration["Figure0"]["scale"].as_double_or_die();
-    double rotateXangle = configuration["Figure0"]["rotateX"].as_double_or_die();
-    double rotateYangle = configuration["Figure0"]["rotateY"].as_double_or_die();
-    double rotateZangle = configuration["Figure0"]["rotateZ"].as_double_or_die();
-    std::vector<double> centerpoint = configuration["Figure0"]["center"].as_double_tuple_or_die();
-    Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
-    int nrPoints = configuration["Figure0"]["nrPoints"].as_int_or_die();
-    int nrLines = configuration["Figure0"]["nrLines"].as_int_or_die();
 
     Figures3D figures;
-    Figure figure;
-    for(int i = 0; i < nrPoints; i++){
-        std::vector<double> pointData = configuration["Figure0"]["point" + std::to_string(i)].as_double_tuple_or_die();
-        Vector3D vector = Vector3D::point(pointData[0], pointData[1], pointData[2]);
-        figure.points.emplace_back(vector);
-    }
+    std::vector<Lines2D> vecLines;
 
-    for(int i = 0; i < nrLines; i++) {
-        std::vector<int> point_indexes = configuration["Figure0"]["line" + std::to_string(i)].as_int_tuple_or_die();
-        Face face;
-        for (int index : point_indexes) {
-            face.point_indexes.emplace_back(index);
+    for (int figIndex = 0; figIndex < nrFigures; figIndex++) {
+        std::string figureKey = "Figure" + std::to_string(figIndex);
+        std::vector<double> color = configuration[figureKey]["color"].as_double_tuple_or_die();
+        NormalizedColor Color(color);
+        double scale = configuration[figureKey]["scale"].as_double_or_die();
+        double rotateXangle = configuration[figureKey]["rotateX"].as_double_or_die();
+        double rX = toRad(rotateXangle);
+        double rotateYangle = configuration[figureKey]["rotateY"].as_double_or_die();
+        double rY = toRad(rotateYangle);
+        double rotateZangle = configuration[figureKey]["rotateZ"].as_double_or_die();
+        double rZ = toRad(rotateZangle);
+        std::vector<double> centerpoint = configuration[figureKey]["center"].as_double_tuple_or_die();
+        Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
+        int nrPoints = configuration[figureKey]["nrPoints"].as_int_or_die();
+        int nrLines = configuration[figureKey]["nrLines"].as_int_or_die();
+
+        Figure figure;
+        for (int i = 0; i < nrPoints; i++) {
+            std::vector<double> pointData = configuration[figureKey]["point" + std::to_string(i)].as_double_tuple_or_die();
+            Vector3D vector = Vector3D::point(pointData[0], pointData[1], pointData[2]);
+            figure.points.emplace_back(vector);
         }
-        figure.faces.emplace_back(face);
+
+        for (int i = 0; i < nrLines; i++) {
+            std::vector<int> point_indexes = configuration[figureKey]["line" + std::to_string(i)].as_int_tuple_or_die();
+            Face face;
+            for (int index : point_indexes) {
+                face.point_indexes.emplace_back(index);
+            }
+            figure.faces.emplace_back(face);
+        }
+        figure.color = Color;
+        Matrix m = TransformationMatrix::lineDrawing(scale, rX, rY, rZ, center, eye);
+        Eyepoint::ApplyTransformation(figure, m);
+        figures.emplace_back(figure);
     }
 
-    for (Vector3D it:figure.points){
-        Eyepoint::doProjection(it, 1);
-    }
-
-    figures.emplace_back(figure);
-    Lines2D lines = Eyepoint::doProjection(figures, Color);
+    Lines2D lines = Eyepoint::doProjection(figures);
     backgroundColor.toEasyImageColor();
 
-
-
-    TransformationMatrix::lineDrawing(scale, rotateXangle, rotateYangle, rotateZangle, center, eye);
     img::EasyImage image = draw2DLines(lines, size, backgroundColor);
     return image;
 }

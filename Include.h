@@ -79,6 +79,10 @@ struct Line2D{
     }
 };
 
+double toRad(double degrees){
+    return degrees * M_PI / 180.0;
+}
+
 struct Face{
     std::vector<int> point_indexes;
 };

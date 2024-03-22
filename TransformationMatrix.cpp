@@ -1,5 +1,6 @@
 #include "TransformationMatrix.h"
-Matrix TransformationMatrix::scaleFigure(const double &scale) {
+Matrix TransformationMatrix::scaleFigure(const double &scale)
+{
     Matrix m;
     m(1, 1) = scale;
     m(2, 2) = scale;
@@ -7,8 +8,11 @@ Matrix TransformationMatrix::scaleFigure(const double &scale) {
     m(4,4) = 1;
     return m;
 }
-Matrix TransformationMatrix::rotateX(const double &angle) {
+Matrix TransformationMatrix::rotateX(const double &angle)
+{
     Matrix m;
+    m(1,1) = 1;
+    m(4,4) = 1;
     m(2, 2) = cos(angle);
     m(3, 2) = -sin(angle);
     m(2, 3) = sin(angle);
@@ -16,8 +20,11 @@ Matrix TransformationMatrix::rotateX(const double &angle) {
     return m;
 }
 
-Matrix TransformationMatrix::rotateY(const double &angle) {
+Matrix TransformationMatrix::rotateY(const double &angle)
+{
     Matrix m;
+    m(2,2) = 1;
+    m(4,4) = 1;
     m(1, 1) = cos(angle);
     m(1, 3) = -sin(angle);
     m(3, 1) = sin(angle);
@@ -25,8 +32,11 @@ Matrix TransformationMatrix::rotateY(const double &angle) {
     return m;
 }
 
-Matrix TransformationMatrix::rotateZ(const double &angle){
+Matrix TransformationMatrix::rotateZ(const double &angle)
+{
     Matrix m;
+    m(3,3) = 1;
+    m(4,4) = 1;
     m(1,1) = cos(angle);
     m(1,2) = -sin(angle);
     m(2,1) = sin(angle);
@@ -34,21 +44,26 @@ Matrix TransformationMatrix::rotateZ(const double &angle){
     return m;
 }
 
-Matrix TransformationMatrix::translate(const Vector3D &vector){
+Matrix TransformationMatrix::translate(const Vector3D &vector)
+{
     Matrix m;
+    m(1,1) = 1;
+    m(2,2) = 1;
+    m(3,3) = 1;
+    m(4,4) = 1;
     m(4,1) = vector.x;
     m(4,2) = vector.y;
     m(4,3) = vector.z;
-    m(4,4) = 1;
     return m;
 }
 
-Matrix TransformationMatrix::eyepointTransformation(const Vector3D& point) {
+Matrix TransformationMatrix::eyepointTransformation(const Vector3D& point)
+{
     Matrix m;
     double r = std::sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
 
-    // Handle cases where r is zero to avoid division by zero errors
-    if (std::abs(r) < std::numeric_limits<double>::epsilon()) {
+    if (std::abs(r) < std::numeric_limits<double>::epsilon())
+    {
         double theta = 0.0;
         double phi = M_PI_2;
     }
@@ -65,12 +80,13 @@ Matrix TransformationMatrix::eyepointTransformation(const Vector3D& point) {
     m(3,2) = sin(phi);
     m(3,3) = cos(phi);
     m(4,3) = -r;
+    m(4,4) = 1;
     return m;
 
 }
 
-Matrix TransformationMatrix::lineDrawing(const double &scale, const double &aX, const double &aY, const double &aZ,
-                                         Vector3D &center, Vector3D &eye) {
+Matrix TransformationMatrix::lineDrawing(const double &scale, const double &aX, const double &aY,
+                                         const double &aZ, Vector3D &center, Vector3D &eye){
     Matrix m;
     m = TransformationMatrix::scaleFigure(scale) * TransformationMatrix::rotateX(aX)
         * TransformationMatrix::rotateY(aY) * TransformationMatrix::rotateZ(aZ)

@@ -4,9 +4,8 @@
 
 class Eyepoint{
 public:
-    void ApplyTransformation(Figure &fig, const Matrix &m);
-    static void eyepointTransformation(const Vector3D& point);
+    static void ApplyTransformation(Figure &fig, const Matrix &m);
     static Point2D doProjection(const Vector3D &point, const double d);
-    static Lines2D doProjection(const Figures3D& figures3D, NormalizedColor &color);
+    static Lines2D doProjection(const Figures3D& figures3D);
 };
 #endif //ENGINE_MATRICES_H
