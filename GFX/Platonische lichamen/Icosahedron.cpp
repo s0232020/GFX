@@ -5,14 +5,14 @@ void createIcosahedron(Figure &figure)
     std::vector<Vector3D> Points
     {
             Vector3D::point(0,0,0),
-            Vector3D::point(0, 0, sqrt(5)/2),
+            Vector3D::point(0, 0, sqrt(5) / 2),
     };
 
     for(int i = 2; i < 7; i++)
     {
         Vector3D vector;
-        vector.x = cos((i-2)*(2*M_PI/5));
-        vector.y = sin((i-2)*(2*M_PI/5));
+        vector.x = cos((i - 2) * (2 * M_PI / 5));
+        vector.y = sin((i - 2) * (2 * M_PI / 5));
         vector.z = 0.5;
         Points.emplace_back(vector);
     }
@@ -20,8 +20,8 @@ void createIcosahedron(Figure &figure)
     for(int i = 7; i < 12; i++)
     {
         Vector3D vector;
-        vector.x = cos(M_PI*5 + (i-7) * 2 * (M_PI / 5));
-        vector.y = sin(M_PI*5 + (i-7) * 2 * (M_PI / 5));
+        vector.x = cos(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
+        vector.y = sin(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
         vector.z = -0.5;
         Points.emplace_back(vector);
     }

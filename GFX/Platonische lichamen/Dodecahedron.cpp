@@ -11,8 +11,8 @@ void createDodecahedron(Figure &figure)
     for(int i = 2; i < 7; i++)
     {
         Vector3D vector;
-        vector.x = cos((i-2)*(2*M_PI/5));
-        vector.y = sin((i-2)*(2*M_PI/5));
+        vector.x = cos((i - 2) * (2 * M_PI / 5));
+        vector.y = sin((i - 2) * (2 * M_PI / 5));
         vector.z = 0.5;
         Points.emplace_back(vector);
     }
@@ -20,8 +20,8 @@ void createDodecahedron(Figure &figure)
     for(int i = 7; i < 12; i++)
     {
         Vector3D vector;
-        vector.x = cos(M_PI*5 + (i-7) * 2 * (M_PI / 5));
-        vector.y = sin(M_PI*5 + (i-7) * 2 * (M_PI / 5));
+        vector.x = cos(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
+        vector.y = sin(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
         vector.z = -0.5;
         Points.emplace_back(vector);
     }
@@ -65,7 +65,7 @@ void createDodecahedron(Figure &figure)
             {19, 13, 12, 11, 18},
             {18, 11, 10, 9,  17},
             {17, 9,  8,  7,  16},
-            {16, 7,  6,  15, 20}
+            {16, 7,  6,  15, 20},
     };
     
     for (const auto& line : Lines)
@@ -77,7 +77,7 @@ void createDodecahedron(Figure &figure)
         figure.faces.emplace_back(face);
     }
 
-    for (const auto& point : Points)
+    for (const auto& point : middlePoints)
     {
         figure.points.emplace_back(point);
     }
