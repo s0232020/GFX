@@ -24,26 +24,41 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
         std::vector<double> centerpoint = configuration[figureKey]["center"].as_double_tuple_or_die();
         Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
         std::string FigureType = configuration[figureKey]["type"];
-
+        Figure figure;
         if (FigureType == "LineDrawing")
         {
-            Figure figure;
             TransformLineDrawing(figure, configuration, figureKey);
-            figure.color = Color;
-            Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
-            ApplyTransformation(figure, m);
-            figures.emplace_back(figure);
         }
 
         if (FigureType == "Cube")
         {
-            Figure figure;
             createCube(figure);
-            figure.color = Color;
-            Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
-            ApplyTransformation(figure, m);
-            figures.emplace_back(figure);
         }
+
+        if (FigureType == "Tetrahedron")
+        {
+            createTetrahedron(figure);
+        }
+
+        if (FigureType == "Octahedron")
+        {
+            createOctahedron(figure);
+        }
+
+        if (FigureType == "Icosahedron")
+        {
+            createIcosahedron(figure);
+        }
+
+        if (FigureType == "Dodecahedron")
+        {
+            createDodecahedron(figure);
+        }
+
+        figure.color = Color;
+        Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
+        ApplyTransformation(figure, m);
+        figures.emplace_back(figure);
         backgroundColor.toEasyImageColor();
     }
 }

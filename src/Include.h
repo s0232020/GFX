@@ -16,8 +16,12 @@
 #include <list>
 #include <limits>
 #include "../GFX/Utils.h"
-#include "../GFX/Cube.h"
+#include "../GFX/Platonische lichamen/Cube.h"
 #include "../GFX/LineDrawing.h"
+#include "../GFX/Platonische lichamen/Tetrahedron.h"
+#include "../GFX/Platonische lichamen/Octahedron.h"
+#include "../GFX/Platonische lichamen/Icosahedron.h"
+#include "../GFX/Platonische lichamen/Dodecahedron.h"
 
 
 #endif //ENGINE_INCLUDE_H

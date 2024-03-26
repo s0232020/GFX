@@ -27,11 +27,18 @@ set(engine_sources
         GFX/Parser.cpp
         GFX/Parser.h
         GFX/Utils.h
-        GFX/Cube.cpp
-        GFX/Cube.h
+        "GFX/Platonische lichamen/Cube.cpp"
+        "GFX/Platonische lichamen/Cube.h"
         GFX/LineDrawing.cpp
         GFX/LineDrawing.h
-)
+        "GFX/Platonische lichamen/Tetrahedron.cpp"
+        "GFX/Platonische lichamen/Tetrahedron.h"
+        "GFX/Platonische lichamen/Icosahedron.cpp"
+        "GFX/Platonische lichamen/Icosahedron.h"
+        "GFX/Platonische lichamen/Octahedron.cpp"
+        "GFX/Platonische lichamen/Octahedron.h"
+        "GFX/Platonische lichamen/Dodecahedron.cpp"
+        "GFX/Platonische lichamen/Dodecahedron.h")
 
 ############################################################
 # Create an executable
