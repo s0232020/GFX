@@ -164,7 +164,7 @@ img::EasyImage LSystem3D(const ini::Configuration &configuration)
     NormalizedColor backgroundColor;
     Figures3D figures;
 
-    Parse3DLSystem(configuration, size, backgroundColor, figures);
+    ParseLineDrawing(configuration, size, backgroundColor, figures);
 
     Lines2D lines = doProjection(figures);
 

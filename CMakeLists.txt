@@ -27,6 +27,10 @@ set(engine_sources
         GFX/Parser.cpp
         GFX/Parser.h
         GFX/Utils.h
+        GFX/Cube.cpp
+        GFX/Cube.h
+        GFX/LineDrawing.cpp
+        GFX/LineDrawing.h
 )
 
 ############################################################

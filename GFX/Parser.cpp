@@ -1,5 +1,5 @@
 #include "Parser.h"
-void Parse3DLSystem(const ini::Configuration &configuration, int &size, NormalizedColor &backgroundColor, Figures3D &figures)
+void ParseLineDrawing(const ini::Configuration &configuration, int &size, NormalizedColor &backgroundColor, Figures3D &figures)
 {
     size = configuration["General"]["size"].as_int_or_die();
     std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
@@ -23,33 +23,35 @@ void Parse3DLSystem(const ini::Configuration &configuration, int &size, Normaliz
         double rZ = toRad(rotateZangle);
         std::vector<double> centerpoint = configuration[figureKey]["center"].as_double_tuple_or_die();
         Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
-        int nrPoints = configuration[figureKey]["nrPoints"].as_int_or_die();
-        int nrLines = configuration[figureKey]["nrLines"].as_int_or_die();
+        std::string FigureType = configuration[figureKey]["type"];
 
-        Figure figure;
-        for (int i = 0; i < nrPoints; i++) {
-            std::vector<double> pointData = configuration[figureKey]["point" + std::to_string(i)].as_double_tuple_or_die();
-            Vector3D vector = Vector3D::point(pointData[0], pointData[1], pointData[2]);
-            figure.points.emplace_back(vector);
+        if (FigureType == "LineDrawing")
+        {
+            Figure figure;
+            TransformLineDrawing(figure, configuration, figureKey);
+            figure.color = Color;
+            Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
+            ApplyTransformation(figure, m);
+            figures.emplace_back(figure);
+
         }
 
-        for (int i = 0; i < nrLines; i++) {
-            std::vector<int> point_indexes = configuration[figureKey]["line" + std::to_string(i)].as_int_tuple_or_die();
-            Face face;
-            for (int index : point_indexes) {
-                face.point_indexes.emplace_back(index);
-            }
-            figure.faces.emplace_back(face);
+        if (FigureType == "Cube")
+        {
+            Figure figure;
+            createCube(figure);
+            figure.color = Color;
+            Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
+            ApplyTransformation(figure, m);
+            figures.emplace_back(figure);
         }
-        figure.color = Color;
-        Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
-        ApplyTransformation(figure, m);
-        figures.emplace_back(figure);
+
+        backgroundColor.toEasyImageColor();
+
     }
-    backgroundColor.toEasyImageColor();
 }
 
-LParser::LSystem2D ReadLSystem(std::string inputfile, std::set<char> &alphabet, double &angle, std::string &initiator,
+LParser::LSystem2D ReadLSystem(const std::string &inputfile, std::set<char> &alphabet, double &angle, std::string &initiator,
                                unsigned int &iterations, double &starting_angle){
     LParser::LSystem2D l_system;
     std::ifstream input_stream(inputfile);

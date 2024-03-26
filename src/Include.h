@@ -16,6 +16,8 @@
 #include <list>
 #include <limits>
 #include "../GFX/Utils.h"
+#include "../GFX/Cube.h"
+#include "../GFX/LineDrawing.h"
 
 
 #endif //ENGINE_INCLUDE_H
