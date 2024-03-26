@@ -115,27 +115,29 @@ Lines2D doProjection(const Figures3D& figures3D)
 {
     Lines2D lines2D;
     double d = 1.0;
-    std::vector<std::vector<Point2D>> vecPoints2D;
-    for (Figure figure:figures3D)
+    for (const Figure &figure : figures3D)
     {
         NormalizedColor color = figure.color;
         std::vector<Point2D> Points2D;
-        for (Vector3D it:figure.points)
+        for (const Vector3D it : figure.points)
         {
-            Point2D point = doProjection(it, 1);
+            Point2D point = doProjection(it, d);
             Points2D.emplace_back(point);
         }
-        vecPoints2D.emplace_back(Points2D);
-        for (Face face:figure.faces)
+        for (const Face &face : figure.faces)
         {
-            int &p1 = face.point_indexes[0];
-            int &p2 = face.point_indexes[1];
-            Point2D &point1 = Points2D[p1];
-            Point2D &point2 = Points2D[p2];
-            Line2D line(point1, point2, color);
-            lines2D.emplace_back(line);
+            const std::vector<int>& pointIndexes = face.point_indexes;
+            const size_t numPoints = pointIndexes.size();
+            for (size_t i = 0; i < numPoints; ++i)
+            {
+                const int p1 = pointIndexes[i];
+                const int p2 = pointIndexes[(i + 1) % numPoints];
+                const Point2D& point1 = Points2D[p1];
+                const Point2D& point2 = Points2D[p2];
+                Line2D line(point1, point2, color);
+                lines2D.emplace_back(line);
+            }
         }
-
     }
 
     return lines2D;

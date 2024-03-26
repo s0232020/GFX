@@ -33,7 +33,6 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
             Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
             ApplyTransformation(figure, m);
             figures.emplace_back(figure);
-
         }
 
         if (FigureType == "Cube")
@@ -45,14 +44,13 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
             ApplyTransformation(figure, m);
             figures.emplace_back(figure);
         }
-
         backgroundColor.toEasyImageColor();
-
     }
 }
 
 LParser::LSystem2D ReadLSystem(const std::string &inputfile, std::set<char> &alphabet, double &angle, std::string &initiator,
-                               unsigned int &iterations, double &starting_angle){
+                               unsigned int &iterations, double &starting_angle)
+{
     LParser::LSystem2D l_system;
     std::ifstream input_stream(inputfile);
     input_stream >> l_system;

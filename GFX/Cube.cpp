@@ -2,14 +2,15 @@
 
 void createCube(Figure &figure) {
     std::vector<Vector3D> Points {
-            Vector3D::point(1, -1, -1),
-            Vector3D::point(-1, 1, -1),
-            Vector3D::point(1, 1, 1),
-            Vector3D::point(-1, -1, 1),
-            Vector3D::point(1, 1, -1),
-            Vector3D::point(-1, -1, -1),
-            Vector3D::point(1, -1, 1),
-            Vector3D::point(-1, 1, 1)
+        Vector3D::point(0,0,0),
+        Vector3D::point(1, -1, -1),
+        Vector3D::point(-1, 1, -1),
+        Vector3D::point(1, 1, 1),
+        Vector3D::point(-1, -1, 1),
+        Vector3D::point(1, 1, -1),
+        Vector3D::point(-1, -1, -1),
+        Vector3D::point(1, -1, 1),
+        Vector3D::point(-1, 1, 1)
     };
 
     std::vector<std::vector<int>> Lines {
