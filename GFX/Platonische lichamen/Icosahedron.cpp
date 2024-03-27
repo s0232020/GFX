@@ -8,20 +8,22 @@ void createIcosahedron(Figure &figure)
             Vector3D::point(0, 0, sqrt(5) / 2),
     };
 
-    for(int i = 2; i < 7; i++)
+    for(int i = 2; i <= 6; i++)
     {
         Vector3D vector;
-        vector.x = cos((i - 2) * (2 * M_PI / 5));
-        vector.y = sin((i - 2) * (2 * M_PI / 5));
+        double calc = (i - 2) * 2 * M_PI / 5;
+        vector.x = cos(calc);
+        vector.y = sin(calc);
         vector.z = 0.5;
         Points.emplace_back(vector);
     }
 
-    for(int i = 7; i < 12; i++)
+    for(int i = 7; i <= 11; i++)
     {
         Vector3D vector;
-        vector.x = cos(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
-        vector.y = sin(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
+        double calc = M_PI / 5 + (i - 7) * 2 * M_PI / 5;
+        vector.x = cos(calc);
+        vector.y = sin(calc);
         vector.z = -0.5;
         Points.emplace_back(vector);
     }
