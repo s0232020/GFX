@@ -8,8 +8,6 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
     std::vector<double> eyepoint = configuration["General"]["eye"].as_double_tuple_or_die();
     Vector3D eye = Vector3D::vector(eyepoint[0], eyepoint[1], eyepoint[2]);
 
-    std::vector<Lines2D> vecLines;
-
     for (int figIndex = 0; figIndex < nrFigures; figIndex++) {
         std::string figureKey = "Figure" + std::to_string(figIndex);
         std::vector<double> color = configuration[figureKey]["color"].as_double_tuple_or_die();
