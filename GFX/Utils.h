@@ -1,6 +1,12 @@
 #ifndef ENGINE_UTILS_H
 #define ENGINE_UTILS_H
+#define _USE_MATH_DEFINES
 
+#include <vector>
+#include "../src/easy_image.h"
+#include <cmath>
+#include "../src/vector3d.h"
+#include <list>
 struct NormalizedColor{
     double r = 0.0;
     double g = 0.0;
@@ -70,7 +76,9 @@ inline double toRad(double degrees){
 
 struct Face{
     std::vector<int> point_indexes;
+    //Face(std::initializer_list<int> indexes) : point_indexes(indexes) {}
 };
+
 struct Figure{
     std::vector<Vector3D> points;
     std::vector<Face> faces;

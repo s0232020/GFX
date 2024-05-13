@@ -53,6 +53,11 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
             createDodecahedron(figure);
         }
 
+        if (FigureType == "3DLSystem")
+        {
+            create3DLSystem(figure, configuration, figIndex);
+        }
+
         figure.color = Color;
         Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
         ApplyTransformation(figure, m);

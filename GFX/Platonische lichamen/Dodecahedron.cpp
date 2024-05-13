@@ -1,59 +1,19 @@
 #include "Dodecahedron.h"
 
-void createDodecahedron(Figure &figure)
-{
-    std::vector<Vector3D> Points
-            {
-                    Vector3D::point(0,0,0),
-                    Vector3D::point(0, 0, sqrt(5)/2),
-            };
+void createDodecahedron(Figure &figure) {
+    Figure icosahedron;
+    createIcosahedron(icosahedron);
 
-    for(int i = 2; i < 7; i++)
-    {
-        Vector3D vector;
-        vector.x = cos((i - 2) * (2 * M_PI / 5));
-        vector.y = sin((i - 2) * (2 * M_PI / 5));
-        vector.z = 0.5;
-        Points.emplace_back(vector);
+    for (const Face face: icosahedron.faces) {
+        Vector3D Jelle = Vector3D::point(0, 0, 0);
+        for (int index: face.point_indexes) {
+            Jelle += icosahedron.points[index];
+        }
+        Jelle /= face.point_indexes.size();
+        figure.points.emplace_back(Jelle);
     }
 
-    for(int i = 7; i < 12; i++)
-    {
-        Vector3D vector;
-        vector.x = cos(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
-        vector.y = sin(M_PI * 5 + (i - 7) * (2 * M_PI / 5));
-        vector.z = -0.5;
-        Points.emplace_back(vector);
-    }
-
-    Points.emplace_back(Vector3D::point(0, 0,-sqrt(5)/2));
-
-    std::vector<Vector3D> middlePoints;
-    for(int i = 0; i < 5; ++i) {
-        Vector3D middlePoint;
-        middlePoint.x = (Points[i].x + Points[(i + 1) % 5].x) / 2.0;
-        middlePoint.y = (Points[i].y + Points[(i + 1) % 5].y) / 2.0;
-        middlePoint.z = (Points[i].z + Points[(i + 1) % 5].z) / 2.0;
-        middlePoints.emplace_back(middlePoint);
-    }
-
-    for(int i = 0; i < 5; ++i) {
-        Vector3D middlePoint;
-        middlePoint.x = (Points[i].x + Points[i + 7].x) / 2.0;
-        middlePoint.y = (Points[i].y + Points[i + 7].y) / 2.0;
-        middlePoint.z = (Points[i].z + Points[i + 7].z) / 2.0;
-        middlePoints.emplace_back(middlePoint);
-    }
-
-    for(int i = 0; i < 5; ++i) {
-        Vector3D middlePoint;
-        middlePoint.x = (Points[i + 7].x + Points[(i + 1) % 5 + 7].x) / 2.0;
-        middlePoint.y = (Points[i + 7].y + Points[(i + 1) % 5 + 7].y) / 2.0;
-        middlePoint.z = (Points[i + 7].z + Points[(i + 1) % 5 + 7].z) / 2.0;
-        middlePoints.emplace_back(middlePoint);
-    }
-
-    std::vector<std::vector<int>> Lines {
+    std::vector<std::vector<int>> faceIndices = {
             {1,  2,  3,  4,  5},
             {1,  6,  7,  8,  2},
             {2,  8,  9,  10, 3},
@@ -67,18 +27,12 @@ void createDodecahedron(Figure &figure)
             {17, 9,  8,  7,  16},
             {16, 7,  6,  15, 20},
     };
-    
-    for (const auto& line : Lines)
-    {
-        Face face;
-        for (int index : line) {
-            face.point_indexes.emplace_back(index);
-        }
-        figure.faces.emplace_back(face);
-    }
 
-    for (const auto& point : middlePoints)
-    {
-        figure.points.emplace_back(point);
+    for (const auto& indices : faceIndices) {
+        Face face;
+        for (int index : indices) {
+            face.point_indexes.push_back(index - 1); // Subtract 1 here
+        }
+        figure.faces.push_back(face);
     }
 }
