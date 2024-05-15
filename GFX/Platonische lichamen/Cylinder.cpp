@@ -1,4 +1,5 @@
 #include "Cylinder.h"
+#include <cmath>
 
 void createCylinder(Figure& figure, const int n, const double h)
 {
