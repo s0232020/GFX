@@ -23,39 +23,27 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
         Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
         std::string FigureType = configuration[figureKey]["type"];
         Figure figure;
-        if (FigureType == "LineDrawing")
-        {
-            TransformLineDrawing(figure, configuration, figureKey);
-        }
 
-        if (FigureType == "Cube")
-        {
-            createCube(figure);
-        }
+        if (FigureType == "LineDrawing") TransformLineDrawing(figure, configuration, figureKey);
 
-        if (FigureType == "Tetrahedron")
-        {
-            createTetrahedron(figure);
-        }
+        if (FigureType == "Cube") createCube(figure);
 
-        if (FigureType == "Octahedron")
-        {
-            createOctahedron(figure);
-        }
+        if (FigureType == "Tetrahedron") createTetrahedron(figure);
 
-        if (FigureType == "Icosahedron")
-        {
-            createIcosahedron(figure);
-        }
+        if (FigureType == "Octahedron") createOctahedron(figure);
 
-        if (FigureType == "Dodecahedron")
-        {
-            createDodecahedron(figure);
-        }
+        if (FigureType == "Icosahedron") createIcosahedron(figure);
 
-        if (FigureType == "3DLSystem")
+        if (FigureType == "Dodecahedron") createDodecahedron(figure);
+
+        if (FigureType == "3DLSystem") create3DLSystem(figure, configuration, figIndex);
+
+        if (FigureType == "Cone" || FigureType == "Cylinder")
         {
-            create3DLSystem(figure, configuration, figIndex);
+            const int n = configuration[figureKey]["n"].as_int_or_die();
+            const double h = configuration[figureKey]["height"].as_double_or_die();
+            if (FigureType == "Cone") createCone(figure, n, h);
+            if (FigureType == "Cylinder") createCylinder(figure, n, h);
         }
 
         figure.color = Color;

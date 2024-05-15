@@ -13,8 +13,7 @@ Draw = { F-> 1,
 
 #De Regels van het L Systeem
 Rules = {
-	#F -> "F(-&\G)(\++&G)F(--&/G)(+&G)",
-	F -> "F+&",
+	F -> "F(-&\G)(\++&G)F(--&/G)(+&G)",
 	G-> "F(+G)(-G)F(+G)(-G)FG"
 }
 
