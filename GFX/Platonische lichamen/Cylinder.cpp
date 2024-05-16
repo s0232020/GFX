@@ -14,12 +14,12 @@ void createCylinder(Figure& figure, const int n, const double h)
     // Define the faces
     std::vector<std::vector<int>> Faces;
     for (int i = 0; i < n; ++i) {
-        Faces.push_back({i, (i+1) % n, (i+1) % n + n, i + n});  // Side
+        Faces.push_back({2*i, (2*i+2) % (2*n), (2*i+3) % (2*n), 2*i+1});  // Side
     }
     std::vector<int> baseFace, topFace;
     for (int i = 0; i < n; ++i) {
-        baseFace.push_back(i);
-        topFace.push_back(i + n);
+        baseFace.push_back(2*i);
+        topFace.push_back(2*i+1);
     }
     Faces.push_back(baseFace);  // Base
     Faces.push_back(topFace);  // Top
