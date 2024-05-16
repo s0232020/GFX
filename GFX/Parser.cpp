@@ -46,6 +46,12 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
             if (FigureType == "Cylinder") createCylinder(figure, n, h);
         }
 
+        if (FigureType == "Sphere")
+        {
+            const int n = configuration[figureKey]["n"].as_int_or_die();
+            createSphere(figure, n);
+        }
+
         figure.color = Color;
         Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
         ApplyTransformation(figure, m);
