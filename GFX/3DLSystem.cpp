@@ -1,16 +1,25 @@
 #include "3DLSystem.h"
 
-void create3DLSystem(Figure &figure, const ini::Configuration &configuration, int figIndex)
+
+Vector3D transform(const Vector3D& position, const Vector3D& rotation) {
+    Vector3D newPosition;
+    // Implement the transformation of position by the given rotation
+    // This is just a placeholder. Replace this with your actual transformation logic.
+    newPosition.x = position.x + rotation.x;
+    newPosition.y = position.y + rotation.y;
+    newPosition.z = position.z + rotation.z;
+    return newPosition;
+}
+
+Lines2D create3DLSystem(Figure &figure, const ini::Configuration &configuration, int figIndex, Lines2D& lines, NormalizedColor& color)
 {
     std::set<char> alphabet;
     double angle;
     std::string initiator;
     unsigned int iterations;
-    double starting_angle;
 
     std::string inputfile = configuration["Figure" + std::to_string(figIndex)]["inputfile"].as_string_or_die();
-    LParser::LSystem2D l_system = ReadLSystem(inputfile, alphabet, angle, initiator, iterations, starting_angle);
-
+    LParser::LSystem3D l_system = ReadLSystem3D(inputfile, alphabet, angle, initiator, iterations);
     std::string currentString = initiator;
 
     for (unsigned int i = 0; i < iterations; ++i)
@@ -39,47 +48,81 @@ void create3DLSystem(Figure &figure, const ini::Configuration &configuration, in
     double currentAngle = 0.0;
     Vector3D rotation; // Declare rotation variable here
 
-    for (char command : initiator) {
+    Vector3D vectorH = Vector3D::point(1, 0, 0);
+    Vector3D vectorL = Vector3D::point(0, 1, 0);
+    Vector3D vectorU = Vector3D::point(0, 0, 1);
+
+
+    for (char command : currentString) { // Changed from initiator to currentString
+        std::cout << "Processing command: " << command << std::endl;
         Vector3D newPosition;
         if (alphabet.find(command) != alphabet.end()) {
             if(l_system.draw(command)) {
                 // Draw a line segment
+                std::cout << "Drawing command: " << command << std::endl;
                 newPosition.x = position.x;
                 newPosition.y = position.y + 1.0;
                 newPosition.z = position.z;
                 figure.points.push_back(position);
                 figure.points.push_back(newPosition);
+                if (position.z != 0 && newPosition.z != 0) {
+                    Point2D oldPoint2D(position.x / position.z, position.y / position.z);
+                    Point2D newPoint2D(newPosition.x / newPosition.z, newPosition.y / newPosition.z);
+                    // Create a 2D line from the projected points
+                    Line2D line(oldPoint2D, newPoint2D, color);
+                    lines.push_back(line);
+                } else {
+                    std::cerr << "Error: Division by zero in point projection." << std::endl;
+                }
                 position = newPosition;
             }
         } else {
+            std::cout << "Non-drawing command: " << command << std::endl;
+            Vector3D newVecH;
+            Vector3D newVecL;
+            Vector3D newVecU;
             switch (command) {
                 case '+':
                     // Rotate left
-                    currentAngle += angle; // Adjust angle based on your rotation step
+                    newVecH = vectorH * cos(angle) + vectorL * sin(angle);
+                    newVecL = -(vectorH * sin(angle)) + vectorL * cos(angle);
+                    vectorH = newVecH;
+                    vectorL = newVecL;
                     break;
                 case '-':
                     // Rotate right
-                    currentAngle -= angle; // Adjust angle based on your rotation step
+                    newVecH = vectorH * cos(-angle) + vectorL * sin(-angle);
+                    newVecL = -(vectorH * sin(-angle)) + vectorL * cos(-angle);
+                    vectorH = newVecH;
+                    vectorL = newVecL;
                     break;
                 case '^':
                     // Rotate upwards
-                    // Use rotation variable here
-                    // Implement rotation logic here
+                    newVecH = vectorH * cos(angle) + vectorU * sin(angle);
+                    newVecU = -(vectorH * sin(angle)) + vectorU * cos(angle);
+                    vectorH = newVecH;
+                    vectorU = newVecU;
                     break;
                 case '&':
                     // Rotate downwards
-                    // Use rotation variable here
-                    // Implement rotation logic here
+                    newVecH = vectorH * cos(-angle) + vectorU * sin(-angle);
+                    newVecU = -(vectorH * sin(-angle)) + vectorU * cos(-angle);
+                    vectorH = newVecH;
+                    vectorU = newVecU;
                     break;
                 case '\\':
                     // Roll left
-                    // Use rotation variable here
-                    // Implement rotation logic here
+                    newVecL = vectorL * cos(angle) - vectorU * sin(angle);
+                    newVecU = vectorL * sin(angle) + vectorU * cos(angle);
+                    vectorL = newVecL;
+                    vectorU = newVecU;
                     break;
                 case '/':
                     // Roll right
-                    // Use rotation variable here
-                    // Implement rotation logic here
+                    newVecL = vectorL * cos(-angle) - vectorU * sin(-angle);
+                    newVecU = vectorL * sin(-angle) + vectorU * cos(-angle);
+                    vectorL = newVecL;
+                    vectorU = newVecU;
                     break;
                 case '(':
                     // Save the current position and angle
@@ -93,6 +136,8 @@ void create3DLSystem(Figure &figure, const ini::Configuration &configuration, in
                         positions.pop();
                         currentAngle = angles.top();
                         angles.pop();
+                    } else {
+                        std::cerr << "Error: Attempted to pop from an empty stack." << std::endl;
                     }
                     break;
                 default:
@@ -100,4 +145,5 @@ void create3DLSystem(Figure &figure, const ini::Configuration &configuration, in
             }
         }
     }
+    return lines;
 }

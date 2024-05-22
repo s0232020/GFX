@@ -36,7 +36,10 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
 
         if (FigureType == "Dodecahedron") createDodecahedron(figure);
 
-        if (FigureType == "3DLSystem") create3DLSystem(figure, configuration, figIndex);
+        if (FigureType == "3DLSystem")
+        {
+            Lines2D lines = create3DLSystem(figure, configuration, figIndex, lines, Color);
+        }
 
         if (FigureType == "Cone" || FigureType == "Cylinder")
         {
@@ -52,11 +55,14 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
             createSphere(figure, n);
         }
 
-        figure.color = Color;
-        Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
-        ApplyTransformation(figure, m);
-        figures.emplace_back(figure);
-        backgroundColor.toEasyImageColor();
+        if (FigureType != "3DLSystem")
+        {
+            figure.color = Color;
+            Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
+            ApplyTransformation(figure, m);
+            figures.emplace_back(figure);
+            backgroundColor.toEasyImageColor();
+        }
     }
 }
 
@@ -73,6 +79,22 @@ LParser::LSystem2D ReadLSystem(const std::string &inputfile, std::set<char> &alp
     initiator = l_system.get_initiator();
     iterations = l_system.get_nr_iterations();
     starting_angle = l_system.get_starting_angle();
+
+    return l_system;
+}
+
+LParser::LSystem3D ReadLSystem3D(const std::string &inputfile, std::set<char> &alphabet, double &angle, std::string &initiator,
+                               unsigned int &iterations)
+{
+    LParser::LSystem3D l_system;
+    std::ifstream input_stream(inputfile);
+    input_stream >> l_system;
+    input_stream.close();
+
+    alphabet = l_system.get_alphabet();
+    angle = l_system.get_angle();
+    initiator = l_system.get_initiator();
+    iterations = l_system.get_nr_iterations();
 
     return l_system;
 }

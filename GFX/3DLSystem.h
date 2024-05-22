@@ -10,7 +10,8 @@
 #include "../src/l_parser.h"
 #include "../src/ini_configuration.h"
 #include "Parser.h"
+#include <cmath>
 
-void create3DLSystem(Figure &figure, const ini::Configuration &configuration, int figIndex);
+Lines2D create3DLSystem(Figure &figure, const ini::Configuration &configuration, int figIndex, Lines2D& lines, NormalizedColor& color);
 
 #endif //ENGINE_3DLSYSTEM_H
