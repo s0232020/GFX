@@ -1,11 +1,14 @@
 #include "main.h"
-img::EasyImage draw2DLines(const Lines2D &lines,const int &size, NormalizedColor &backgroundcolor){
+#include "ZBuffer.h"
+#include <algorithm>
+img::EasyImage draw2DLines(Lines2D &lines, const int &size, NormalizedColor &backgroundcolor, bool zBuffer)
+{
     double xmin = lines.front().p1.x;
     double xmax = lines.front().p1.x;
     double ymin = lines.front().p1.y;
     double ymax = lines.front().p1.y;
 
-    for(const auto& element:lines){
+    for(const auto& element: lines){
         if (element.p1.x > xmax){
             xmax = element.p1.x;
         }
@@ -46,8 +49,9 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int &size, NormalizedColor
     img::Color convert = backgroundcolor.toEasyImageColor();
     img::EasyImage image(imagex, imagey, convert);
 
+    ZBuffer zbuffer(image.get_width(), image.get_height());
 
-    for (auto& element:lines){
+    for (auto& element: lines){
         double p1x = 0.0;
         double p2x = 0.0;
         double p1y = 0.0;
@@ -60,10 +64,70 @@ img::EasyImage draw2DLines(const Lines2D &lines,const int &size, NormalizedColor
         p1y = p1y + dy;
         p2x = p2x + dx;
         p2y = p2y + dy;
-        image.draw_line(p1x, p1y, p2x, p2y, element.color.toEasyImageColor());
+
+        if (zBuffer)
+            image.draw_zbuf_line(lround(p1x), lround(p1y), element.p1.z, lround(p2x), lround(p2y), element.p2.z,
+                                 element.color.toEasyImageColor(), zbuffer);
+        else image.draw_line(lround(p1x), lround(p1y), lround(p2x), lround(p2y), element.color.toEasyImageColor());
     }
     return image;
 }
+
+// Test
+//{
+//    std::list<Point2D> points;
+//    for (auto &i: lines) {
+//        points.push_back(i.p1);
+//        points.push_back(i.p2);
+//    }
+//    std::list<double> xPoints;
+//    std::list<double> yPoints;
+//    for (auto &i: points) {
+//        xPoints.push_back(i.x);
+//        yPoints.push_back(i.y);
+//    }
+//
+//    double xMax = *std::max_element(xPoints.begin(), xPoints.end());
+//    double xMin = *std::min_element(xPoints.begin(), xPoints.end());
+//    double yMax = *std::max_element(yPoints.begin(), yPoints.end());
+//    double yMin = *std::min_element(yPoints.begin(), yPoints.end());
+//
+//    double xRange = xMax - xMin;
+//    double yRange = yMax - yMin;
+//
+//    double imageX = size * (xRange / std::max(xRange, yRange));
+//    double imageY = size * (yRange / std::max(xRange, yRange));
+//
+//    double d = 0.95 * (imageX / xRange);
+//
+//    double DCx = d * ((xMax + xMin)/2.0);
+//    double DCy = d * ((yMax + yMin)/2.0);
+//    double dx = (imageX/2.0) - DCx;
+//    double dy = (imageY/2.0) - DCy;
+//
+//    img::Color col = backgroundcolor.toEasyImageColor();
+//
+//    img::EasyImage image(lround(imageX), lround(imageY), col);
+//
+//    ZBuffer buffer(image.get_width(), image.get_height());
+//
+//    for (auto &i : lines) {
+//        i.p1.x = i.p1.x * d + dx;
+//        i.p1.y = i.p1.y * d + dy;
+//        i.p2.x = i.p2.x * d + dx;
+//        i.p2.y = i.p2.y * d + dy;
+//
+//        img::Color lineColor = i.color.toEasyImageColor();
+//
+//        if (zBuffer) {
+//            image.draw_zbuf_line(lround(i.p1.x), lround(i.p1.y), i.z1, lround(i.p2.x), lround(i.p2.y), i.z2, lineColor, buffer);
+//        } else {
+//            image.draw_line(lround(i.p1.x), lround(i.p1.y), lround(i.p2.x), lround(i.p2.y),lineColor);
+//        }
+//    }
+//    return image;
+//}
+
 
 Lines2D DrawLSystem(LParser::LSystem2D &l_system, const ini::Configuration &configuration, int &size, NormalizedColor &backgroundColor)
 {
@@ -153,22 +217,35 @@ img::EasyImage LSystem2D(const ini::Configuration &configuration)
     LParser::LSystem2D l_system;
 
     Lines2D lines = DrawLSystem(l_system, configuration, size, backgroundColor);
-    img::EasyImage image = draw2DLines(lines, size, backgroundColor);
+    img::EasyImage image = draw2DLines(lines, size, backgroundColor, false);
 
     return image;
 }
 
-img::EasyImage LSystem3D(const ini::Configuration &configuration)
+img::EasyImage LSystem3D(const ini::Configuration &configuration, bool zBuffer)
 {
     int size;
     NormalizedColor backgroundColor;
     Figures3D figures;
 
-    ParseLineDrawing(configuration, size, backgroundColor, figures);
-
+    if (zBuffer)
+    {
+        ParseLineDrawing(configuration, size, backgroundColor, figures, true);
+    } else {
+        ParseLineDrawing(configuration, size, backgroundColor, figures, false);
+    }
     Lines2D lines = doProjection(figures);
 
-    img::EasyImage image = draw2DLines(lines, size, backgroundColor);
+    img::EasyImage image = draw2DLines(lines, size, backgroundColor, zBuffer);
     return image;
 }
 
+img::EasyImage zBuffer(const ini::Configuration &configuration)
+{
+    int size;
+    NormalizedColor backgroundcolor;
+    Figures3D figures;
+    img::EasyImage image = ParseZBuffer(configuration, size, backgroundcolor, figures);
+    return image;
+
+}

@@ -1,5 +1,6 @@
 #include "3DLSystem.h"
 
+Face::Face(std::vector<int> i) : point_indexes(std::move(i)) {}
 
 Vector3D transform(const Vector3D& position, const Vector3D& rotation) {
     Vector3D newPosition;
@@ -11,139 +12,198 @@ Vector3D transform(const Vector3D& position, const Vector3D& rotation) {
     return newPosition;
 }
 
-Lines2D create3DLSystem(Figure &figure, const ini::Configuration &configuration, int figIndex, Lines2D& lines, NormalizedColor& color)
-{
+
+void create3DLSystem(const ini::Configuration &configuration, Figure &figure, const std::string &figureKey) {
+    // Load the L-system from the configuration
+    const std::string inputfile = configuration[figureKey]["inputfile"].as_string_or_die();
     std::set<char> alphabet;
     double angle;
     std::string initiator;
     unsigned int iterations;
 
-    std::string inputfile = configuration["Figure" + std::to_string(figIndex)]["inputfile"].as_string_or_die();
     LParser::LSystem3D l_system = ReadLSystem3D(inputfile, alphabet, angle, initiator, iterations);
-    std::string currentString = initiator;
 
-    for (unsigned int i = 0; i < iterations; ++i)
-    {
-        std::string nextString;
-        for (char ch : currentString)
-        {
-            if (alphabet.find(ch) != alphabet.end())
-            {
-                nextString += l_system.get_replacement(ch);
-            } else
-            {
-                nextString += ch;
-            }
-        }
-        currentString = nextString;
+    std::vector<double> center = configuration[figureKey]["center"].as_double_tuple_or_die();;
+
+    std::map<char, std::string> replacements;
+    std::map<char, bool> draw;
+    for (auto i: alphabet) {
+        draw[i] = l_system.draw(i);
+        replacements[i] = l_system.get_replacement(i);
     }
 
-    // Interpret the L-system string as drawing commands
-    std::stack<Vector3D> positions;
-    std::stack<double> angles;
-    Vector3D position;
-    position.x = 0;
-    position.y = 0;
-    position.z = 0;
-    double currentAngle = 0.0;
-    Vector3D rotation; // Declare rotation variable here
+    angle = (angle*M_PI)/180;
 
-    Vector3D vectorH = Vector3D::point(1, 0, 0);
-    Vector3D vectorL = Vector3D::point(0, 1, 0);
-    Vector3D vectorU = Vector3D::point(0, 0, 1);
+    Vector3D curPoint = Vector3D::point(0, 0, 0);
+    Vector3D H = Vector3D::vector(1, 0, 0);
+    Vector3D L = Vector3D::vector(0, 1, 0);
+    Vector3D U = Vector3D::vector(0, 0, 1);
+    std::stack<Vector3D> pointStack;
+    std::stack<Vector3D> HStack;
+    std::stack<Vector3D> LStack;
+    std::stack<Vector3D> UStack;
 
 
-    for (char command : currentString) { // Changed from initiator to currentString
-        std::cout << "Processing command: " << command << std::endl;
-        Vector3D newPosition;
-        if (alphabet.find(command) != alphabet.end()) {
-            if(l_system.draw(command)) {
-                // Draw a line segment
-                std::cout << "Drawing command: " << command << std::endl;
-                newPosition.x = position.x;
-                newPosition.y = position.y + 1.0;
-                newPosition.z = position.z;
-                figure.points.push_back(position);
-                figure.points.push_back(newPosition);
-                if (position.z != 0 && newPosition.z != 0) {
-                    Point2D oldPoint2D(position.x / position.z, position.y / position.z);
-                    Point2D newPoint2D(newPosition.x / newPosition.z, newPosition.y / newPosition.z);
-                    // Create a 2D line from the projected points
-                    Line2D line(oldPoint2D, newPoint2D, color);
-                    lines.push_back(line);
-                } else {
-                    std::cerr << "Error: Division by zero in point projection." << std::endl;
-                }
-                position = newPosition;
+    figure.points.push_back(curPoint);
+    int indexCounter = 0;
+
+    for (unsigned int i = 0; i < iterations; i++) {
+        std::string replacement;
+        for (auto j: initiator) {
+            if (j == '+') replacement += "+";
+            else if (j == '-') replacement += "-";
+            else if (j == '(') replacement += "(";
+            else if (j == ')') replacement += ")";
+            else if (j == '^') replacement += "^";
+            else if (j == '&') replacement += "&";
+            else if (j == '\\') replacement += "\\";
+            else if (j == '/') replacement += "/";
+            else if (j == '|') replacement += "|";
+            else replacement += replacements[j];
+        }
+        initiator = replacement;
+    }
+
+    std::vector<Vector3D> toAdd;
+    for (unsigned int k = 0; k < initiator.length(); k++) {
+        char i = initiator[k];
+        if (i == '+') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
             }
-        } else {
-            std::cout << "Non-drawing command: " << command << std::endl;
-            Vector3D newVecH;
-            Vector3D newVecL;
-            Vector3D newVecU;
-            switch (command) {
-                case '+':
-                    // Rotate left
-                    newVecH = vectorH * cos(angle) + vectorL * sin(angle);
-                    newVecL = -(vectorH * sin(angle)) + vectorL * cos(angle);
-                    vectorH = newVecH;
-                    vectorL = newVecL;
-                    break;
-                case '-':
-                    // Rotate right
-                    newVecH = vectorH * cos(-angle) + vectorL * sin(-angle);
-                    newVecL = -(vectorH * sin(-angle)) + vectorL * cos(-angle);
-                    vectorH = newVecH;
-                    vectorL = newVecL;
-                    break;
-                case '^':
-                    // Rotate upwards
-                    newVecH = vectorH * cos(angle) + vectorU * sin(angle);
-                    newVecU = -(vectorH * sin(angle)) + vectorU * cos(angle);
-                    vectorH = newVecH;
-                    vectorU = newVecU;
-                    break;
-                case '&':
-                    // Rotate downwards
-                    newVecH = vectorH * cos(-angle) + vectorU * sin(-angle);
-                    newVecU = -(vectorH * sin(-angle)) + vectorU * cos(-angle);
-                    vectorH = newVecH;
-                    vectorU = newVecU;
-                    break;
-                case '\\':
-                    // Roll left
-                    newVecL = vectorL * cos(angle) - vectorU * sin(angle);
-                    newVecU = vectorL * sin(angle) + vectorU * cos(angle);
-                    vectorL = newVecL;
-                    vectorU = newVecU;
-                    break;
-                case '/':
-                    // Roll right
-                    newVecL = vectorL * cos(-angle) - vectorU * sin(-angle);
-                    newVecU = vectorL * sin(-angle) + vectorU * cos(-angle);
-                    vectorL = newVecL;
-                    vectorU = newVecU;
-                    break;
-                case '(':
-                    // Save the current position and angle
-                    positions.push(position);
-                    angles.push(currentAngle);
-                    break;
-                case ')':
-                    // Restore the saved position and angle
-                    if (!positions.empty() && !angles.empty()) {
-                        position = positions.top();
-                        positions.pop();
-                        currentAngle = angles.top();
-                        angles.pop();
-                    } else {
-                        std::cerr << "Error: Attempted to pop from an empty stack." << std::endl;
-                    }
-                    break;
-                default:
-                    break;
+            Vector3D tempH(H);
+            H = (H*cos(angle)) + (L*sin(angle));
+            L = (L*cos(angle)) - (tempH*sin(angle));
+            continue;
+        }
+        if (i == '-') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            Vector3D tempH(H);
+            H = (H*cos(-angle)) + (L*sin(-angle));
+            L = (L*cos(-angle)) - (tempH*sin(-angle));
+            continue;
+        }
+        if (i == '^') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            Vector3D tempH(H);
+            H = (H*cos(angle)) + (U*sin(angle));
+            U = (U*cos(angle)) - (tempH*sin(angle));
+            continue;
+        }
+        if (i == '&') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            Vector3D tempH(H);
+            H = (H*cos(-angle)) + (U*sin(-angle));
+            U = (U*cos(-angle)) - (tempH*sin(-angle));
+            continue;
+        }
+        if (i == '\\') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            Vector3D tempL(L);
+            L = (L*cos(angle)) - (U*sin(angle));
+            U = (tempL*sin(angle)) + (U*cos(angle));
+            continue;
+        }
+        if (i == '/') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            Vector3D tempL(L);
+            L = (L*cos(-angle)) - (U*sin(-angle));
+            U = (tempL*sin(-angle)) + (U*cos(-angle));
+            continue;
+        }
+        if (i == '|') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            H = -H;
+            L = -L;
+            continue;
+        }
+        if (i == '(') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            pointStack.push(curPoint);
+            HStack.push(H);
+            LStack.push(L);
+            UStack.push(U);
+            continue;
+        }
+        if (i == ')') {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
+            }
+            curPoint = pointStack.top();
+            pointStack.pop();
+            H = HStack.top();
+            HStack.pop();
+            L = LStack.top();
+            LStack.pop();
+            U = UStack.top();
+            UStack.pop();
+
+            figure.points.push_back(curPoint);
+            indexCounter++;
+            continue;
+        }
+        curPoint += H;
+        if (draw[i]) toAdd.push_back(curPoint);
+        else {
+            if (!toAdd.empty()) {
+                figure.points.push_back(toAdd[toAdd.size()-1]);
+                indexCounter++;
+                Face newFace({indexCounter, indexCounter-1});
+                figure.faces.push_back(newFace);
+                toAdd.clear();
             }
         }
     }
-    return lines;
+
+
 }

@@ -1,5 +1,7 @@
 #include "Parser.h"
-void ParseLineDrawing(const ini::Configuration &configuration, int &size, NormalizedColor &backgroundColor, Figures3D &figures)
+#include "ZBuffer.h"
+
+void ParseLineDrawing(const ini::Configuration &configuration, int &size, NormalizedColor &backgroundColor, Figures3D &figures, bool zBuffer)
 {
     size = configuration["General"]["size"].as_int_or_die();
     std::vector<double> backgroundcolorVec = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
@@ -12,17 +14,19 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
         std::string figureKey = "Figure" + std::to_string(figIndex);
         std::vector<double> color = configuration[figureKey]["color"].as_double_tuple_or_die();
         NormalizedColor Color(color);
-        double scale = configuration[figureKey]["scale"].as_double_or_die();
-        double rotateXangle = configuration[figureKey]["rotateX"].as_double_or_die();
-        double rX = toRad(rotateXangle);
-        double rotateYangle = configuration[figureKey]["rotateY"].as_double_or_die();
-        double rY = toRad(rotateYangle);
-        double rotateZangle = configuration[figureKey]["rotateZ"].as_double_or_die();
-        double rZ = toRad(rotateZangle);
+        const double scale = configuration[figureKey]["scale"].as_double_or_die();
+        const double rotateXangle = configuration[figureKey]["rotateX"].as_double_or_die();
+        const double rX = toRad(rotateXangle);
+        const double rotateYangle = configuration[figureKey]["rotateY"].as_double_or_die();
+        const double rY = toRad(rotateYangle);
+        const double rotateZangle = configuration[figureKey]["rotateZ"].as_double_or_die();
+        const double rZ = toRad(rotateZangle);
         std::vector<double> centerpoint = configuration[figureKey]["center"].as_double_tuple_or_die();
         Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
         std::string FigureType = configuration[figureKey]["type"];
         Figure figure;
+
+
 
         if (FigureType == "LineDrawing") TransformLineDrawing(figure, configuration, figureKey);
 
@@ -36,10 +40,7 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
 
         if (FigureType == "Dodecahedron") createDodecahedron(figure);
 
-        if (FigureType == "3DLSystem")
-        {
-            Lines2D lines = create3DLSystem(figure, configuration, figIndex, lines, Color);
-        }
+        if (FigureType == "3DLSystem") create3DLSystem(configuration, figure, figureKey);
 
         if (FigureType == "Cone" || FigureType == "Cylinder")
         {
@@ -55,14 +56,22 @@ void ParseLineDrawing(const ini::Configuration &configuration, int &size, Normal
             createSphere(figure, n);
         }
 
-        if (FigureType != "3DLSystem")
+        if (FigureType == "Torus")
         {
+            const int n = configuration[figureKey]["n"].as_int_or_die();
+            const int m = configuration[figureKey]["m"].as_int_or_die();
+            const double R = configuration[figureKey]["R"].as_double_or_die();
+            const double r = configuration[figureKey]["r"].as_double_or_die();
+            createTorus(figure, n, m, R, r);
+        }
+
+
+
             figure.color = Color;
             Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
             ApplyTransformation(figure, m);
             figures.emplace_back(figure);
             backgroundColor.toEasyImageColor();
-        }
     }
 }
 
@@ -97,4 +106,102 @@ LParser::LSystem3D ReadLSystem3D(const std::string &inputfile, std::set<char> &a
     iterations = l_system.get_nr_iterations();
 
     return l_system;
+}
+
+img::EasyImage ParseZBuffer(const ini::Configuration &configuration, int &size, NormalizedColor &backgroundcolor, Figures3D &figures)
+{
+    Figures3D temp;
+
+    size = configuration["General"]["size"].as_int_or_die();
+    std::vector<double> backgroundColor = configuration["General"]["backgroundcolor"].as_double_tuple_or_die();
+    backgroundcolor = NormalizedColor(backgroundColor);
+    int nrFigures = configuration["General"]["nrFigures"].as_int_or_die();
+    std::vector<double> eyepoint = configuration["General"]["eye"].as_double_tuple_or_die();
+    Vector3D eye = Vector3D::vector(eyepoint[0], eyepoint[1], eyepoint[2]);
+    for (int figIndex = 0; figIndex < nrFigures; figIndex++)
+    {
+        std::string figureKey = "Figure" + std::to_string(figIndex);
+        std::vector<double> color = configuration[figureKey]["color"].as_double_tuple_or_die();
+        NormalizedColor Color(color);
+        const double scale = configuration[figureKey]["scale"].as_double_or_die();
+        const double rotateXangle = configuration[figureKey]["rotateX"].as_double_or_die();
+        const double rX = toRad(rotateXangle);
+        const double rotateYangle = configuration[figureKey]["rotateY"].as_double_or_die();
+        const double rY = toRad(rotateYangle);
+        const double rotateZangle = configuration[figureKey]["rotateZ"].as_double_or_die();
+        const double rZ = toRad(rotateZangle);
+
+        std::vector<double> centerpoint = configuration[figureKey]["center"].as_double_tuple_or_die();
+        Vector3D center = Vector3D::vector(centerpoint[0], centerpoint[1], centerpoint[2]);
+        std::string FigureType = configuration[figureKey]["type"];
+        Figure figure;
+
+        if (FigureType == "LineDrawing") TransformLineDrawing(figure, configuration, figureKey);
+
+        if (FigureType == "Cube") createCube(figure);
+
+        if (FigureType == "Tetrahedron") createTetrahedron(figure);
+
+        if (FigureType == "Octahedron") createOctahedron(figure);
+
+        if (FigureType == "Icosahedron") createIcosahedron(figure);
+
+        if (FigureType == "Dodecahedron") createDodecahedron(figure);
+
+        if (FigureType == "3DLSystem") create3DLSystem(configuration, figure, figureKey);
+
+        if (FigureType == "Cone" || FigureType == "Cylinder")
+        {
+            const int n = configuration[figureKey]["n"].as_int_or_die();
+            const double h = configuration[figureKey]["height"].as_double_or_die();
+            if (FigureType == "Cone") createCone(figure, n, h);
+            if (FigureType == "Cylinder") createCylinder(figure, n, h);
+        }
+
+        if (FigureType == "Sphere")
+        {
+            const int n = configuration[figureKey]["n"].as_int_or_die();
+            createSphere(figure, n);
+        }
+
+        if (FigureType == "Torus")
+        {
+            const int n = configuration[figureKey]["n"].as_int_or_die();
+            const int m = configuration[figureKey]["m"].as_int_or_die();
+            const double R = configuration[figureKey]["R"].as_double_or_die();
+            const double r = configuration[figureKey]["r"].as_double_or_die();
+            createTorus(figure, n, m, R, r);
+        }
+
+        figure.color = Color;
+        Matrix m = lineDrawing(scale, rX, rY, rZ, center, eye);
+        ApplyTransformation(figure, m);
+        temp.emplace_back(figure);
+        backgroundcolor.toEasyImageColor();
+    }
+
+    for (auto& figure : temp)
+    {
+        ZBuffer::triangulate(figure);
+        figures.emplace_back(figure);
+    }
+
+    Lines2D lines = doProjection(figures);
+
+    double width, height, d, dx, dy;
+    ZBuffer::calculations(size, width, height, d, dx, dy, lines);
+
+    img::EasyImage image(lround(width), lround(height), backgroundcolor.toEasyImageColor());
+    ZBuffer zbuffer(image.get_width(), image.get_height());
+
+    for (auto &figure : figures) {
+        for (auto &face : figure.faces) {
+            image.draw_zbuf_triag(
+                                  figure.points[face.point_indexes[0]],
+                                  figure.points[face.point_indexes[1]],
+                                  figure.points[face.point_indexes[2]],
+                                  d, dx, dy, figure.color.toEasyImageColor(), zbuffer);
+        }
+    }
+    return image;
 }

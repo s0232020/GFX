@@ -46,7 +46,11 @@ set(engine_sources
         "GFX/Platonische lichamen/Cylinder.cpp"
         "GFX/Platonische lichamen/Cylinder.h"
         "GFX/Platonische lichamen/Sphere.cpp"
-        "GFX/Platonische lichamen/Sphere.h")
+        "GFX/Platonische lichamen/Sphere.h"
+        "GFX/Platonische lichamen/Torus.cpp"
+        "GFX/Platonische lichamen/Torus.h"
+        GFX/ZBuffer.cpp
+        GFX/ZBuffer.h)
 
 ############################################################
 # Create an executable

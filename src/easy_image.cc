@@ -21,6 +21,9 @@
 #include <math.h>
 #include <iostream>
 #include <sstream>
+#include "../GFX/ZBuffer.h"
+#include "vector3d.h"
+#include <limits>
 
 #ifndef le32toh
 #define le32toh(x) (x)
@@ -206,7 +209,178 @@ img::Color const& img::EasyImage::operator()(unsigned int x, unsigned int y) con
 	return bitmap.at(x * height + y);
 }
 
-void img::EasyImage::draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color)
+void img::EasyImage::draw_zbuf_triag(Vector3D const &a, Vector3D const &b, Vector3D const &c, double &d, double &dx, double &dy, img::Color color, ZBuffer &zbuffer)
+{
+    double xa = ((d * a.x) / (-a.z)) + dx;
+    double ya = ((d * a.y) / (-a.z)) + dy;
+    double xb = ((d * b.x) / (-b.z)) + dx;
+    double yb = ((d * b.y) / (-b.z)) + dy;
+    double xc = ((d * c.x) / (-c.z)) + dx;
+    double yc = ((d * c.y) / (-c.z)) + dy;
+
+    // Ensure coordinates are within image boundaries
+    xa = std::max(0.0, std::min((double)this->width - 1, xa));
+    ya = std::max(0.0, std::min((double)this->height - 1, ya));
+    xb = std::max(0.0, std::min((double)this->width - 1, xb));
+    yb = std::max(0.0, std::min((double)this->height - 1, yb));
+    xc = std::max(0.0, std::min((double)this->width - 1, xc));
+    yc = std::max(0.0, std::min((double)this->height - 1, yc));
+
+    double yMinTemp = std::min(ya, yb);
+    double yMaxTemp = std::max(ya, yb);
+
+    int yMin = (int)lround(std::min(yMinTemp, yc) + 0.5);
+    int yMax = (int)lround(std::max(yMaxTemp, yc) - 0.5);
+
+    for (int yi = yMin; yi <= yMax; yi++) {
+        double xlAB = std::numeric_limits<double>::infinity();
+        double xlAC = std::numeric_limits<double>::infinity();
+        double xlBC = std::numeric_limits<double>::infinity();
+        double xrAB = -std::numeric_limits<double>::infinity();
+        double xrAC = -std::numeric_limits<double>::infinity();
+        double xrBC = -std::numeric_limits<double>::infinity();
+
+        double xp = xa;
+        double yp = ya;
+        double xq = xb;
+        double yq = yb;
+        if ((yi - yp) * (yi - yq) <= 0 && yp != yq) {
+            double xi = xq + (xp - xq) * (yi - yq) / (yp - yq);
+            xlAB = xi;
+            xrAB = xi;
+        }
+
+        xq = xc;
+        yq = yc;
+        if ((yi - yp) * (yi - yq) <= 0 && yp != yq) {
+            double xi = xq + (xp - xq) * (yi - yq) / (yp - yq);
+            xlAC = xi;
+            xrAC = xi;
+        }
+
+        xp = xb;
+        yp = yb;
+        xq = xc;
+        yq = yc;
+        if ((yi - yp) * (yi - yq) <= 0 && yp != yq) {
+            double xi = xq + (xp - xq) * (yi - yq) / (yp - yq);
+            xlBC = xi;
+            xrBC = xi;
+        }
+
+        double left = std::min(xlAB, xlAC);
+        double right = std::max(xrAB, xrAC);
+        int xl = (int)lround(std::min(left, xlBC) + 0.5);
+        int xr = (int)lround(std::max(right, xrBC) - 0.5);
+
+        xl = std::max(0, xl);
+        xr = std::min((int)this->width - 1, xr);
+
+        double xg = (xa + xb + xc) / 3;
+        double yg = (ya + yb + yc) / 3;
+        double one_over_zg = 1 / (3 * a.z) + 1 / (3 * b.z) + 1 / (3 * c.z);
+
+        Vector3D u = Vector3D::vector(b.x - a.x, b.y - a.y, b.z - a.z);
+        Vector3D v = Vector3D::vector(c.x - a.x, c.y - a.y, c.z - a.z);
+        double w1 = u.y * v.z - u.z * v.y;
+        double w2 = u.z * v.x - u.x * v.z;
+        double w3 = u.x * v.y - u.y * v.x;
+        double k = w1 * a.x + w2 * a.y + w3 * a.z;
+        double dzdx = w1 / (-d * k);
+        double dzdy = w2 / (-d * k);
+
+        for (int i = xl; i <= xr; i++) {
+            double cur_z_value = zbuffer.get(i, yi);
+//            double new_z_value = 1.0001 * one_over_zg + (i - xg) * (dzdx) + (yi - yg) * (dzdy);
+            double new_z_value = one_over_zg + (i - xg) * dzdx + (yi - yg) * dzdy;
+
+
+            if (new_z_value < cur_z_value) {
+                zbuffer.update(i, yi, new_z_value);
+
+                double z = 1.0 / new_z_value;
+                double x = -z * (i - dx) / d;
+                double y = -z * (yi - dy) / d;
+
+                // Set the pixel color in the image
+                (*this)(i, yi) = color;
+            }
+        }
+    }
+}
+
+void  img::EasyImage::draw_zbuf_line(unsigned int x0, unsigned int y0, double z0, unsigned int x1, unsigned int y1, double z1, const img::Color& color, ZBuffer& zbuffer)
+{
+    // Calculate the differences in x and y
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+
+    // Determine the direction to step in
+    int stepX = (dx > 0) - (dx < 0);
+    int stepY = (dy > 0) - (dy < 0);
+
+    // Calculate the initial error (2 times the error to avoid floating point)
+    dx = std::abs(dx) * 2;
+    dy = std::abs(dy) * 2;
+
+    // Draw the first pixel
+    if (zbuffer.should_draw(x0, y0, z0)) {
+        (*this)(x0, y0) = color;
+        zbuffer.update(x0, y0, z0);
+        assert(zbuffer.should_draw(x0, y0, z0) == false);
+    }
+
+    // If the line is more horizontal than vertical
+    if (dx > dy) {
+        // Initial error
+        int error = dy - dx / 2;
+
+        while (x0 != x1) {
+            // If error has overflowed, step in y
+            if (error >= 0) {
+                y0 += stepY;
+                error -= dx;
+            }
+
+            // Step in x
+            x0 += stepX;
+            error += dy;
+
+            // Draw the pixel if it's closer than the current one
+            if (zbuffer.should_draw(x0, y0, z0)) {
+                (*this)(x0, y0) = color;
+                zbuffer.update(x0, y0, z0);
+                assert(zbuffer.should_draw(x0, y0, z0) == false);
+            }
+        }
+    }
+        // If the line is more vertical than horizontal
+    else {
+        // Initial error
+        int error = dx - dy / 2;
+
+        while (y0 != y1) {
+            // If error has overflowed, step in x
+            if (error >= 0) {
+                x0 += stepX;
+                error -= dy;
+            }
+
+            // Step in y
+            y0 += stepY;
+            error += dx;
+
+            // Draw the pixel if it's closer than the current one
+            if (zbuffer.should_draw(x0, y0, z0)) {
+                (*this)(x0, y0) = color;
+                zbuffer.update(x0, y0, z0);
+                assert(zbuffer.should_draw(x0, y0, z0) == false);
+            }
+        }
+    }
+}
+
+void img::EasyImage::draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, img::Color color)
 {
 	if (x0 >= this->width || y0 >= this->height || x1 >= this->width || y1 > this->height) {
         std::stringstream ss;
@@ -334,7 +508,7 @@ std::istream& img::operator>>(std::istream& in, EasyImage & image)
 	bmpfile_magic magic;
 	bmpfile_header file_header;
 	bmp_header header;
-	//a temp buffer for reading the padding at the end of each line
+	//a temp zbuffer for reading the padding at the end of each line
 	uint8_t padding[] =
 	{ 0, 0, 0, 0 };
 

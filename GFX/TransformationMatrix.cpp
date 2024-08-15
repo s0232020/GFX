@@ -38,8 +38,8 @@ Matrix rotateZ(const double &angle)
     m(3,3) = 1;
     m(4,4) = 1;
     m(1,1) = cos(angle);
-    m(1,2) = -sin(angle);
-    m(2,1) = sin(angle);
+    m(1,2) = sin(angle);
+    m(2,1) = -sin(angle);
     m(2,2) = cos(angle);
     return m;
 }
@@ -108,7 +108,7 @@ Point2D doProjection(const Vector3D &point, const double d)
     double x_prime = (d * point.x) / -point.z;
     double y_prime = (d * point.y) / -point.z;
 
-    return Point2D(x_prime, y_prime);
+    return {x_prime, y_prime, -point.z};
 }
 
 Lines2D doProjection(const Figures3D& figures3D)
@@ -119,7 +119,7 @@ Lines2D doProjection(const Figures3D& figures3D)
     {
         NormalizedColor color = figure.color;
         std::vector<Point2D> Points2D;
-        for (const Vector3D it : figure.points)
+        for (const Vector3D& it : figure.points)
         {
             Point2D point = doProjection(it, d);
             Points2D.emplace_back(point);
@@ -134,7 +134,7 @@ Lines2D doProjection(const Figures3D& figures3D)
                 const int p2 = pointIndexes[(i + 1) % numPoints];
                 const Point2D& point1 = Points2D[p1];
                 const Point2D& point2 = Points2D[p2];
-                Line2D line(point1, point2, color);
+                Line2D line(point1, point2, point1.z, point2.z, color);
                 lines2D.emplace_back(line);
             }
         }

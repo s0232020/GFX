@@ -12,6 +12,8 @@
 #include "Parser.h"
 #include <cmath>
 
-Lines2D create3DLSystem(Figure &figure, const ini::Configuration &configuration, int figIndex, Lines2D& lines, NormalizedColor& color);
+
+void create3DLSystem(const ini::Configuration &configuration, Figure &figure, const std::string &figureKey);
+
 
 #endif //ENGINE_3DLSYSTEM_H

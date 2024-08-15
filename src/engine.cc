@@ -1,18 +1,19 @@
-#include "Include.h"
 #include "../GFX/main.h"
+#include "easy_image.h"
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
     std::string type = configuration["General"]["type"].as_string_or_die();
-    if(type == "2DLSystem"){
-        return LSystem2D(configuration);
-    }
-    else if(type == "Wireframe"){
-        return LSystem3D(configuration);
-    }
-    else{
-        throw std::runtime_error("Unknown type: " + type);
-    }
+
+    if (type == "2DLSystem") return LSystem2D(configuration);
+
+    else if (type == "Wireframe") return LSystem3D(configuration, false);
+
+    else if (type == "ZBufferedWireframe") return LSystem3D(configuration, true);
+
+    else if (type == "ZBuffering") return zBuffer(configuration);
+
+    else throw std::runtime_error("Unknown type: " + type);
 
 }
 

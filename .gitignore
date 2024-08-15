@@ -33,7 +33,6 @@
 
 # other
 *.bmp
-*.png
 *cmake-build-debug
 *cmake-build-debug-coverage
 *.idea

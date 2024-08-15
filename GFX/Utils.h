@@ -7,6 +7,7 @@
 #include <cmath>
 #include "../src/vector3d.h"
 #include <list>
+
 struct NormalizedColor{
     double r = 0.0;
     double g = 0.0;
@@ -40,14 +41,19 @@ struct NormalizedColor{
 struct Point2D{
     double x = 0.0;
     double y = 0.0;
+    double z = 0.0;
 
-    Point2D(){
-
-    }
+    Point2D()=default;
 
     Point2D(double x, double y){
         this->x = x;
         this->y = y;
+    }
+
+    Point2D(double x, double y, double z){
+        this->x = x;
+        this->y = y;
+        this->z = z;
     }
 };
 
@@ -55,6 +61,9 @@ struct Line2D{
     Point2D p1;
     Point2D p2;
     NormalizedColor color;
+
+    double z1;
+    double z2;
 
     Line2D(){}
 
@@ -68,15 +77,24 @@ struct Line2D{
         this->p2 = p2;
         this->color = color;
     }
+
+    Line2D(Point2D p1, Point2D p2, double z1, double z2, NormalizedColor& color){
+        this->p1 = p1;
+        this->p2 = p2;
+        this->z1 = z1;
+        this->z2 = z2;
+        this->color = color;
+    }
 };
 
 inline double toRad(double degrees){
     return degrees * M_PI / 180.0;
 }
 
-struct Face{
+struct Face {
     std::vector<int> point_indexes;
-    //Face(std::initializer_list<int> indexes) : point_indexes(indexes) {}
+    Face() = default;
+    explicit Face(std::vector<int> i);
 };
 
 struct Figure{
@@ -84,6 +102,7 @@ struct Figure{
     std::vector<Face> faces;
     NormalizedColor color;
 };
+
 
 typedef std::list<Figure> Figures3D;
 using Lines2D = std::vector<Line2D>;

@@ -20,6 +20,10 @@
 #include <stdint.h>
 #include <vector>
 #include <iostream>
+
+class ZBuffer;
+class Vector3D;
+
 /**
  * \brief The namespace of the EasyImage class
  */
@@ -219,7 +223,8 @@ namespace img
 			 * 	assert(y1 < getHeight())
 			 */
 			void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color);
-
+            void  draw_zbuf_line(unsigned int x0, unsigned int y0, double z0, unsigned int x1, unsigned int y1, double z1, const img::Color& color, ZBuffer& zbuffer);
+            void draw_zbuf_triag(Vector3D const &a, Vector3D const &b, Vector3D const &c, double &d, double &dx, double &dy, img::Color color, ZBuffer &zbuffer);
 		private:
 			friend std::istream& operator>>(std::istream& in, EasyImage & image);
 			/**
