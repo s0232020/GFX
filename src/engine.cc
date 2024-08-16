@@ -13,7 +13,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
 
     else if (type == "ZBuffering") return zBuffer(configuration);
 
-    else throw std::runtime_error("Unknown type: " + type);
+    else return {};
 
 }
 
